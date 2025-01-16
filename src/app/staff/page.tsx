@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react';
+import Image from 'next/image';
 import staffData from '@/data/staff.json';
 import Layout from '../components/Layout';
 import SectionTitle from '../components/SectionTitle';
@@ -27,10 +28,12 @@ export default function StaffPage() {
                 >
                   <div className="flex flex-col items-center text-center gap-4">
                     <div className="relative w-24 h-24 rounded-full overflow-hidden bg-surface">
-                      <img 
+                      <Image 
                         src={member.image} 
                         alt={member.name}
-                        className="w-full h-full object-cover"
+                        className="object-cover"
+                        fill
+                        sizes="(max-width: 96px) 96px"
                       />
                     </div>
                     <div>
@@ -62,10 +65,12 @@ export default function StaffPage() {
                   >
                     <div className="flex items-center gap-4">
                       <div className="relative w-16 h-16 rounded-full overflow-hidden bg-surface">
-                        <img 
+                        <Image 
                           src={member.image} 
                           alt={member.name}
-                          className="w-full h-full object-cover"
+                          className="object-cover"
+                          fill
+                          sizes="(max-width: 64px) 64px"
                         />
                       </div>
                       <div>

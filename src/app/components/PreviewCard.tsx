@@ -1,4 +1,5 @@
 import { UserCircleIcon } from '@heroicons/react/24/solid';
+import Image from 'next/image';
 
 interface StaffMember {
   name: string;
@@ -39,11 +40,15 @@ export default function PreviewCard({ title, onViewAll, items, type }: PreviewCa
               className="flex items-center gap-4 p-4 rounded-lg bg-background hover:shadow-md transition-shadow"
             >
               {(member as StaffMember).image ? (
-                <img 
-                  src={(member as StaffMember).image} 
-                  alt={(member as StaffMember).name}
-                  className="w-12 h-12 rounded-full object-cover"
-                />
+                <div className="relative w-12 h-12 rounded-full overflow-hidden">
+                  <Image 
+                    src={(member as StaffMember).image!} 
+                    alt={(member as StaffMember).name}
+                    className="object-cover"
+                    fill
+                    sizes="(max-width: 48px) 48px"
+                  />
+                </div>
               ) : (
                 <UserCircleIcon className="w-12 h-12 text-gray" />
               )}

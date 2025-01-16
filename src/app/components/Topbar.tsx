@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import ThemeSwitcher from './ThemeSwitcher';
 import { useRouter } from 'next/navigation';
 
