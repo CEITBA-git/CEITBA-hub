@@ -9,7 +9,9 @@ export const authOptions: NextAuthOptions = {
       authorization: {
         params: {
           prompt: "select_account",
-          hd: "itba.edu.ar"
+          access_type: "online",
+          hd: "itba.edu.ar",
+          scope: "openid email profile"
         }
       }
     })
@@ -25,8 +27,11 @@ export const authOptions: NextAuthOptions = {
   },
   callbacks: {
     async signIn({ account, profile }) {
-      if (account?.provider === "google") {
-        return profile?.email?.endsWith("@itba.edu.ar") ?? false;
+      if (!account || !profile?.email) {
+        return false;
+      }
+      if (account.provider === "google") {
+        return profile.email.endsWith("@itba.edu.ar");
       }
       return false;
     },
@@ -37,9 +42,9 @@ export const authOptions: NextAuthOptions = {
       return session;
     },
     async jwt({ token, account, profile }) {
-      if (account) {
+      if (account && profile) {
         token.accessToken = account.access_token;
-        token.email = profile?.email;
+        token.email = profile.email;
       }
       return token;
     }
@@ -51,8 +56,10 @@ export const authOptions: NextAuthOptions = {
         httpOnly: true,
         sameSite: 'lax',
         path: '/',
-        secure: process.env.NODE_ENV === 'production'
+        secure: process.env.NODE_ENV === 'production',
+        domain: process.env.NODE_ENV === 'production' ? '.ceitba.org.ar' : undefined
       }
     }
-  }
+  },
+  debug: process.env.NODE_ENV === 'development'
 }; 
