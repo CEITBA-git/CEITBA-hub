@@ -3,14 +3,17 @@
 interface QuickAccessCardProps {
   title: string;
   description: string;
-  href: string;
+  href?: string;
   emoji: string;
   comingSoon?: boolean;
 }
 
 export default function QuickAccessCard({ title, description, href, emoji, comingSoon }: QuickAccessCardProps) {
+  const Component = comingSoon ? 'div' : 'a';
+  
   return (
-    <div 
+    <Component 
+      {...(!comingSoon && { href })}
       className={`relative block p-6 bg-surface hover:bg-surface/80 rounded-xl border border-black/[.08] dark:border-white/[.145] transition-all duration-300 ${comingSoon ? 'cursor-not-allowed' : 'hover:scale-[1.02]'}`}
     >
       {comingSoon && (
@@ -27,6 +30,6 @@ export default function QuickAccessCard({ title, description, href, emoji, comin
           <p className="text-gray text-sm leading-relaxed">{description}</p>
         </div>
       </div>
-    </div>
+    </Component>
   );
 } 
