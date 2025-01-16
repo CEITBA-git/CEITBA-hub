@@ -1,27 +1,28 @@
-import { NextAuthOptions } from 'next-auth';
+import type { NextAuthOptions } from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
-import { env } from '@/lib/env';
 
 export const authOptions: NextAuthOptions = {
   providers: [
     GoogleProvider({
-      clientId: env.GOOGLE_CLIENT_ID,
-      clientSecret: env.GOOGLE_CLIENT_SECRET,
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
       authorization: {
         params: {
-          access_type: "online",
           prompt: "select_account",
           hd: "itba.edu.ar"
         }
       }
     })
   ],
-  secret: env.NEXTAUTH_SECRET,
+  secret: process.env.NEXTAUTH_SECRET,
   session: {
     strategy: "jwt",
     maxAge: 30 * 24 * 60 * 60 // 30 días
   },
-  debug: env.NODE_ENV === 'development',
+  pages: {
+    signIn: '/minecraft',
+    error: '/minecraft'
+  },
   callbacks: {
     async signIn({ account, profile }) {
       if (account?.provider === "google") {
@@ -42,9 +43,5 @@ export const authOptions: NextAuthOptions = {
       }
       return token;
     }
-  },
-  pages: {
-    signIn: '/minecraft',
-    error: '/minecraft'
   }
 }; 
