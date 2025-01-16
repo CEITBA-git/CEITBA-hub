@@ -18,17 +18,18 @@ const nextConfig = {
           {
             key: 'Content-Security-Policy',
             value: [
-              "default-src 'self'",
-              "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
+              "default-src 'self' https://ceitba.org.ar",
+              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://accounts.google.com",
               "style-src 'self' 'unsafe-inline'",
               "img-src 'self' data: https: http:",
-              "connect-src 'self' https://accounts.google.com/",
-              "frame-src 'self' https://accounts.google.com/",
+              "connect-src 'self' https://accounts.google.com https://ceitba.org.ar",
+              "frame-src 'self' https://accounts.google.com",
+              "form-action 'self' https://accounts.google.com",
             ].join('; '),
           },
           {
             key: 'X-Frame-Options',
-            value: 'DENY',
+            value: 'SAMEORIGIN',
           },
           {
             key: 'X-Content-Type-Options',
@@ -37,10 +38,6 @@ const nextConfig = {
           {
             key: 'Referrer-Policy',
             value: 'origin-when-cross-origin',
-          },
-          {
-            key: 'Permissions-Policy',
-            value: 'camera=(), microphone=(), geolocation=()',
           },
         ],
       },
