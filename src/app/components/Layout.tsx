@@ -4,7 +4,7 @@ import Footer from './Footer';
 interface LayoutProps {
   children: React.ReactNode;
   activeTab: string;
-  onTabChange: (tab: string) => void;
+  onTabChange?: (tab: string) => void;
 }
 
 export default function Layout({ children, activeTab, onTabChange }: LayoutProps) {
