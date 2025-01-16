@@ -101,7 +101,7 @@ export default function Home() {
   return (
     <Layout activeTab={activeTab} onTabChange={setActiveTab}>
       {/* Hero Section */}
-      <section id="hero" className={`text-center mb-24 transition-all duration-1000 transform ${isVisible('hero') ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}>
+      <section id="hero" className={`select-none text-center mb-24 transition-all duration-1000 transform ${isVisible('hero') ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}>
         <h1 className="text-4xl md:text-5xl font-bold mb-6">
           Bienvenido al CEITBA ✨
         </h1>
@@ -111,7 +111,7 @@ export default function Home() {
       </section>
 
       {/* Quick Access Section */}
-      <section id="quick-access" className={`mb-24 transition-all duration-1000 transform ${isVisible('quick-access') ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-10'}`}>
+      <section id="quick-access" className={`select-none mb-24 transition-all duration-1000 transform ${isVisible('quick-access') ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-10'}`}>
         <SectionTitle>Acceso Rápido</SectionTitle>
         <div className="grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
           <QuickAccessCard
@@ -136,7 +136,7 @@ export default function Home() {
       </section>
 
       {/* Values Section */}
-      <section id="values" className={`mb-24 max-w-5xl mx-auto`}>
+      <section id="values" className={`select-none mb-24 max-w-5xl mx-auto`}>
         <SectionTitle>Nuestros Valores</SectionTitle>
         <div className="space-y-16">
           {values.map((value, index) => (
@@ -164,7 +164,7 @@ export default function Home() {
       </section>
 
       {/* Departments Section */}
-      <section id="departments" className="mb-24 max-w-5xl mx-auto">
+      <section id="departments" className="mb-24 select-none max-w-5xl mx-auto">
         <SectionTitle>Departamentos</SectionTitle>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {departments.map((dept, index) => (
@@ -192,7 +192,7 @@ export default function Home() {
       </section>
 
       {/* Preview Sections */}
-      <section id="previews" className="mb-24 max-w-5xl mx-auto">
+      <section id="previews" className="mb-24 select-none max-w-5xl mx-auto">
         <div className="grid gap-16 grid-cols-1 lg:grid-cols-2">
           <div>
             <div className="flex items-center justify-between mb-6">

@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "CEITBA Hub",
-  description: "Portal central del Centro de Estudiantes ITBA",
+  title: "CEITBA",
+  description: "Página oficial del Centro de Estudiantes ITBA",
 };
 
 export default function RootLayout({
