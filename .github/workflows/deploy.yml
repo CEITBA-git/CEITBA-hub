@@ -17,7 +17,7 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }} 
           script: |
             cd hub/
-            git clone https://CEITBA-git:${{ secrets.GITHUB_TOKEN}}@github.com/CEITBA-git/CEITBA-hub.git
+            git pull https://CEITBA-git:${{ secrets.GITHUB_TOKEN}}@github.com/CEITBA-git/CEITBA-hub.git
             sudo npm install
             sudo npm run build
             pm2 restart hub
