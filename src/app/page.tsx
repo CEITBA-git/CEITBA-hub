@@ -132,7 +132,6 @@ export default function Home() {
             description="Únete a nuestra comunidad de gaming"
             href="/minecraft"
             emoji="🎮"
-            comingSoon={true}
           />
         </div>
       </section>
