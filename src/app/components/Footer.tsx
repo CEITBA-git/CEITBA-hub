@@ -40,10 +40,10 @@ export default function Footer() {
             <h3 className="text-lg font-semibold mb-4">Contacto</h3>
             <ul className="space-y-2">
               <li className="text-gray text-sm">
-                📍 Av. Eduardo Madero 399
+                📍 San Martín 202, CABA
               </li>
               <li className="text-gray text-sm">
-                📧 info@ceitba.org.ar
+                📧 ceitba@itba.edu.ar
               </li>
               <li className="text-gray text-sm">
                 🌐 www.ceitba.org.ar

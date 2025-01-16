@@ -27,21 +27,6 @@
   --gray: #6b7280;
   --secondary-background: #eef0f2;
   --surface: #e3e7eb;
-
-  --subject-color-1: rgba(179, 229, 252, 0.75);
-  --subject-color-2: rgba(225, 190, 231, 0.75);
-  --subject-color-3: rgba(200, 230, 201, 0.75);
-  --subject-color-4: rgba(255, 224, 178, 0.75);
-  --subject-color-5: rgba(248, 187, 208, 0.75);
-  --subject-color-6: rgba(178, 235, 242, 0.75);
-  --subject-color-7: rgba(209, 196, 233, 0.75);
-  --subject-color-8: rgba(220, 237, 200, 0.75);
-  --subject-color-9: rgba(178, 223, 219, 0.75);
-  --subject-color-10: rgba(255, 204, 188, 0.75);
-
-  --error-red-bg: rgba(239, 68, 68, 0.2);
-  --error-red-border: rgba(239, 68, 68, 0.4);
-  --error-red-text: rgb(185, 28, 28);
 }
 
 .dark {
@@ -53,173 +38,34 @@
   --gray: #9ca3af;
   --secondary-background: #2d2d2d;
   --surface: #242424;
-  --error-red-bg: rgba(248, 113, 113, 0.2);
-  --error-red-border: rgba(248, 113, 113, 0.4);
-  --error-red-text: rgb(252, 165, 165);
-  --subject-color-1: rgba(130, 177, 255, 0.4);
-  --subject-color-2: rgba(186, 104, 200, 0.4);
-  --subject-color-3: rgba(129, 199, 132, 0.4);
-  --subject-color-4: rgba(255, 183, 77, 0.4);
-  --subject-color-5: rgba(240, 98, 146, 0.4);
-  --subject-color-6: rgba(77, 208, 225, 0.4);
-  --subject-color-7: rgba(149, 117, 205, 0.4);
-  --subject-color-8: rgba(174, 213, 129, 0.4);
-  --subject-color-9: rgba(77, 182, 172, 0.4);
-  --subject-color-10: rgba(255, 138, 101, 0.4);
 }
 
 body {
   color: var(--foreground);
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 div {
   color: var(--textDefault);
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
-
-  @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-  }
-
-  @keyframes slideUp {
-    from {
-      opacity: 0;
-      transform: translateY(20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  @keyframes slideRight {
-    from {
-      opacity: 0;
-      transform: translateX(-20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateX(0);
-    }
-  }
-
-  @keyframes scaleUp {
-    from {
-      opacity: 0;
-      transform: scale(0.95);
-    }
-    to {
-      opacity: 1;
-      transform: scale(1);
-    }
-  }
-
-  .animate-fadeIn {
-    animation: fadeIn 0.8s ease-out forwards;
-  }
-
-  .animate-slideUp {
-    animation: slideUp 0.8s ease-out forwards;
-  }
-
-  .animate-slideRight {
-    animation: slideRight 0.8s ease-out forwards;
-  }
-
-  .animate-scaleUp {
-    animation: scaleUp 0.8s ease-out forwards;
-  }
-
-  .animation-delay-200 {
-    animation-delay: 200ms;
-  }
-
-  .animation-delay-400 {
-    animation-delay: 400ms;
-  }
-
-  .animation-delay-600 {
-    animation-delay: 600ms;
-  }
-
-  .animation-delay-800 {
-    animation-delay: 800ms;
-  }
+html {
+  height: 100%;
 }
 
+/* Eliminar estilos que causan doble scrollbar */
 html, body {
   overflow-x: hidden;
-  height: 100%;
   margin: 0;
   padding: 0;
 }
 
 main {
-  min-height: 100vh;
-  width: 100vw;
-  overflow-x: hidden;
-}
-
-@layer base {
-  :root {
-    --background: 0 0% 100%;
-    --foreground: 240 10% 3.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 240 10% 3.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 240 10% 3.9%;
-    --primary: 240 5.9% 10%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 240 4.8% 95.9%;
-    --secondary-foreground: 240 5.9% 10%;
-    --muted: 240 4.8% 95.9%;
-    --muted-foreground: 240 3.8% 46.1%;
-    --accent: 240 4.8% 95.9%;
-    --accent-foreground: 240 5.9% 10%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 240 5.9% 90%;
-    --input: 240 5.9% 90%;
-    --ring: 240 5.9% 10%;
-    --radius: 0.5rem;
-  }
-
-  .dark {
-    --background: 240 10% 3.9%;
-    --foreground: 0 0% 98%;
-    --card: 240 10% 3.9%;
-    --card-foreground: 0 0% 98%;
-    --popover: 240 10% 3.9%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 0 0% 98%;
-    --primary-foreground: 240 5.9% 10%;
-    --secondary: 240 3.7% 15.9%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 240 3.7% 15.9%;
-    --muted-foreground: 240 5% 64.9%;
-    --accent: 240 3.7% 15.9%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 240 3.7% 15.9%;
-    --input: 240 3.7% 15.9%;
-    --ring: 240 4.9% 83.9%;
-  }
-}
-
-@keyframes loading {
-  0%, 100% {
-    transform: translateY(0);
-  }
-
-  50% {
-    transform: translateY(-0.5rem);
-  }
+  flex: 1;
+  width: 100%;
+  position: relative;
 }
