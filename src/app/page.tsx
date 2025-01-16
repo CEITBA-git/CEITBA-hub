@@ -119,6 +119,7 @@ export default function Home() {
             description="Accede a nuestra base de conocimientos y documentación"
             href="/wiki"
             emoji="📚"
+            comingSoon={true}
           />
           <QuickAccessCard
             title="Planificador"
@@ -131,6 +132,7 @@ export default function Home() {
             description="Únete a nuestra comunidad de gaming"
             href="/minecraft"
             emoji="🎮"
+            comingSoon={true}
           />
         </div>
       </section>
