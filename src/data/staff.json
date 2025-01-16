@@ -1,0 +1,146 @@
+{
+  "directivos": [
+    {
+      "name": "Ian Dalton",
+      "role": "Presidente",
+      "email": "idalton@itba.edu.ar",
+      "department": "Directivo",
+      "image": "/staff/placeholder.jpg"
+    },
+    {
+      "name": "Agustín Miguel",
+      "role": "Vicepresidente",
+      "email": "agmiguel@itba.edu.ar",
+      "department": "Directivo",
+      "image": "/staff/placeholder.jpg"
+    },
+    {
+      "name": "Mateo Massarani",
+      "role": "Tesorero",
+      "email": "mmassarani@itba.edu.ar",
+      "department": "Directivo",
+      "image": "/staff/placeholder.jpg"
+    },
+    {
+      "name": "Teresa de Jesús Avila",
+      "role": "Secretaria",
+      "email": "tavila@itba.edu.ar",
+      "department": "Directivo",
+      "image": "/staff/placeholder.jpg"
+    }
+  ],
+  "departamentos": [
+    {
+      "name": "Uriel Sosa Vazquez",
+      "role": "Jefe de IT",
+      "email": "usosavazquez@itba.edu.ar",
+      "department": "IT",
+      "image": "/staff/placeholder.jpg"
+    },
+    {
+      "name": "Victoria López",
+      "role": "Jefa de Media",
+      "email": "viclopez@itba.edu.ar",
+      "department": "Media",
+      "image": "/staff/placeholder.jpg"
+    },
+    {
+      "name": "Juan Bautista Gramaglia",
+      "role": "Jefe de Infraestructura y Proyectos",
+      "email": "jgramaglia@itba.edu.ar",
+      "department": "Infraestructura y Proyectos",
+      "image": "/staff/placeholder.jpg"
+    },
+    {
+      "name": "Mauro Bellincioni",
+      "role": "Miembro de Náutica",
+      "email": "mbellincioni@itba.edu.ar",
+      "department": "Náutica",
+      "image": "/staff/placeholder.jpg"
+    },
+    {
+      "name": "Tomás Casas",
+      "role": "Miembro de Deportes",
+      "email": "tcasas@itba.edu.ar",
+      "department": "Deportes",
+      "image": "/staff/placeholder.jpg"
+    },
+    {
+      "name": "Camila Lee",
+      "role": "Miembro de IT",
+      "email": "clee@itba.edu.ar",
+      "department": "IT",
+      "image": "/staff/placeholder.jpg"
+    },
+    {
+      "name": "Lautaro Bonsenor",
+      "role": "Miembro de IT",
+      "email": "lbonsenor@itba.edu.ar",
+      "department": "IT",
+      "image": "/staff/placeholder.jpg"
+    },
+    {
+      "name": "Miguel Chodos",
+      "role": "Miembro de Deportes",
+      "email": "mchodos@itba.edu.ar",
+      "department": "Deportes",
+      "image": "/staff/placeholder.jpg"
+    },
+    {
+      "name": "Irina de Paz Puratich",
+      "role": "Miembro de Deportes",
+      "email": "idepazpuratich@itba.edu.ar",
+      "department": "Deportes",
+      "image": "/staff/placeholder.jpg"
+    },
+    {
+      "name": "Martín Francisco Gardella",
+      "role": "Miembro de Infraestructura y Proyectos",
+      "email": "mgardella@itba.edu.ar",
+      "department": "Infraestructura y Proyectos",
+      "image": "/staff/placeholder.jpg"
+    },
+    {
+      "name": "Gabriel Víctor Balthazar Hahn",
+      "role": "Miembro de Deportes",
+      "email": "ghahn@itba.edu.ar",
+      "department": "Deportes",
+      "image": "/staff/placeholder.jpg"
+    },
+    {
+      "name": "Martina Malleville",
+      "role": "Miembro de Media",
+      "email": "mmalleville@itba.edu.ar",
+      "department": "Media",
+      "image": "/staff/placeholder.jpg"
+    },
+    {
+      "name": "Franco Tobías Massarani",
+      "role": "Secretario de Deportes",
+      "email": "fmassarani@itba.edu.ar",
+      "department": "Deportes",
+      "image": "/staff/placeholder.jpg"
+    },
+    {
+      "name": "Lorenzo Rosas",
+      "role": "Miembro de Infraestructura y Proyectos",
+      "email": "lrosas@itba.edu.ar",
+      "department": "Infraestructura y Proyectos",
+      "image": "/staff/placeholder.jpg"
+    },
+    {
+      "name": "Lucas Solar Grillo",
+      "role": "Miembro de Infraestructura y Proyectos",
+      "email": "lsolargrillo@itba.edu.ar",
+      "department": "Infraestructura y Proyectos",
+      "image": "/staff/placeholder.jpg"
+    },
+    {
+      "name": "Victoria Vallejo",
+      "role": "Miembro de Media",
+      "email": "vvallejo@itba.edu.ar",
+      "department": "Media",
+      "image": "/staff/placeholder.jpg"
+    }
+  ]
+} 

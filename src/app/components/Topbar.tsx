@@ -29,7 +29,7 @@ export default function Topbar({ activeTab, onTabChange }: TopbarProps) {
                   activeTab === 'staff' ? 'text-primary' : 'text-gray hover:text-textDefault'
                 }`}
               >
-                Comisión Directiva
+                Miembros
               </button>
               <button
                 onClick={() => onTabChange('faq')}

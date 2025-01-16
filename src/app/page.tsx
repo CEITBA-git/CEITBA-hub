@@ -5,31 +5,14 @@ import { useState, useEffect } from 'react';
 import Layout from './components/Layout';
 import PreviewCard from './components/PreviewCard';
 import SectionTitle from './components/SectionTitle';
+import staffData from '@/data/staff.json';
+import faqData from '@/data/faq.json';
 
-const staffMembers = [
-  { 
-    name: 'Juan Pérez', 
-    role: 'Presidente',
-    image: '/staff/juan.jpg'
-  },
-  { 
-    name: 'María García', 
-    role: 'Vicepresidente',
-    image: '/staff/maria.jpg'
-  },
-  // Add more staff members
-];
+// Combinar directivos y departamentos para la lista completa
+const staffMembers = [...staffData.directivos, ...staffData.departamentos];
 
-const faqItems = [
-  {
-    question: '¿Qué es CEITBA?',
-    answer: 'CEITBA es el Centro de Estudiantes del Instituto Tecnológico de Buenos Aires, una organización que representa y apoya a todos los estudiantes del ITBA.'
-  },
-  {
-    question: '¿Cómo me uno a CEITBA?',
-    answer: 'Todos los estudiantes del ITBA son automáticamente miembros de CEITBA. Para participar activamente, puedes unirte a nuestras comisiones o asistir a nuestros eventos.'
-  },
-];
+// Obtener las preguntas frecuentes
+const faqItems = faqData.items;
 
 const departments = [
   {
@@ -212,69 +195,158 @@ export default function Home() {
           {/* Preview Sections */}
           <section id="previews" className="mb-24 max-w-5xl mx-auto">
             <div className="grid gap-16 grid-cols-1 lg:grid-cols-2">
-              <PreviewCard
-                title="Comisión Directiva"
-                onViewAll={() => setActiveTab('staff')}
-                items={staffMembers.slice(0, 3)}
-                type="staff"
-              />
-              <PreviewCard
-                title="Preguntas Frecuentes"
-                onViewAll={() => setActiveTab('faq')}
-                items={faqItems.slice(0, 3)}
-                type="faq"
-              />
+              <div>
+                <div className="flex items-center justify-between mb-6">
+                  <h2 className="text-2xl font-semibold">Miembros</h2>
+                  <button
+                    onClick={() => setActiveTab('staff')}
+                    className="text-primary hover:text-primary/80 text-sm font-medium transition-colors"
+                  >
+                    Ver todos
+                  </button>
+                </div>
+                <div className="space-y-4">
+                  {staffMembers.slice(0, 3).map((member, index) => (
+                    <div 
+                      key={index}
+                      className="bg-surface/50 backdrop-blur-sm rounded-xl p-4 border border-black/[.08] dark:border-white/[.145] hover:scale-[1.02] transition-all duration-300"
+                    >
+                      <div className="flex items-center gap-4">
+                        <div className="relative w-12 h-12 rounded-full overflow-hidden bg-surface">
+                          <img 
+                            src={member.image} 
+                            alt={member.name}
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                        <div>
+                          <h3 className="font-semibold">{member.name}</h3>
+                          <p className="text-gray text-sm">{member.role}</p>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <div className="flex items-center justify-between mb-6">
+                  <h2 className="text-2xl font-semibold">FAQ</h2>
+                  <button
+                    onClick={() => setActiveTab('faq')}
+                    className="text-primary hover:text-primary/80 text-sm font-medium transition-colors"
+                  >
+                    Ver todas
+                  </button>
+                </div>
+                <div className="space-y-4">
+                  {faqItems.slice(0, 3).map((item, index) => (
+                    <div 
+                      key={index}
+                      className="bg-surface/50 backdrop-blur-sm rounded-xl p-4 border border-black/[.08] dark:border-white/[.145] hover:scale-[1.01] transition-all duration-300"
+                    >
+                      <h3 className="font-semibold mb-2">{item.question}</h3>
+                      <p className="text-gray text-sm leading-relaxed">{item.answer}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
           </section>
         </>
       )}
 
       {activeTab === 'staff' && (
-        <section className="bg-surface p-8 rounded-lg max-w-5xl mx-auto">
-          <SectionTitle>Comisión Directiva</SectionTitle>
-          <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-            {displayedStaff.map((member, index) => (
-              <PreviewCard
-                key={index}
-                title=""
-                onViewAll={() => {}}
-                items={[member]}
-                type="staff"
-              />
-            ))}
-          </div>
-          {staffMembers.length > ITEMS_PER_PAGE && (
-            <div className="mt-6 text-center">
-              <button
-                onClick={() => setShowAllStaff(!showAllStaff)}
-                className="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-all duration-200 transform hover:scale-105 hover:shadow-lg"
-              >
-                {showAllStaff ? 'Ver menos' : 'Ver más'}
-              </button>
+        <section className="space-y-12">
+          {/* Directivos */}
+          <div className="bg-surface/50 backdrop-blur-xl rounded-2xl border border-black/[.08] dark:border-white/[.145] p-8">
+            <SectionTitle>Directivos</SectionTitle>
+            <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-4 mt-8">
+              {staffMembers
+                .filter(member => member.department === 'Directivo')
+                .map((member, index) => (
+                  <div 
+                    key={index}
+                    className="bg-background/50 backdrop-blur-sm rounded-xl p-6 border border-black/[.08] dark:border-white/[.145] hover:scale-[1.02] transition-all duration-300"
+                  >
+                    <div className="flex flex-col items-center text-center gap-4">
+                      <div className="relative w-24 h-24 rounded-full overflow-hidden bg-surface">
+                        <img 
+                          src={member.image} 
+                          alt={member.name}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                      <div>
+                        <h3 className="font-semibold text-lg">{member.name}</h3>
+                        <p className="text-primary font-medium mb-1">{member.role}</p>
+                        <a href={`mailto:${member.email}`} className="text-gray text-sm hover:text-primary transition-colors">
+                          {member.email}
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                ))}
             </div>
-          )}
+          </div>
+
+          {/* Departamentos */}
+          {['IT', 'Media', 'Infraestructura y Proyectos', 'Deportes', 'Náutica'].map(dept => {
+            const departmentMembers = staffMembers.filter(member => member.department === dept);
+            if (departmentMembers.length === 0) return null;
+
+            return (
+              <div key={dept} className="bg-surface/50 backdrop-blur-xl rounded-2xl border border-black/[.08] dark:border-white/[.145] p-8">
+                <SectionTitle>{dept}</SectionTitle>
+                <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mt-8">
+                  {departmentMembers.map((member, index) => (
+                    <div 
+                      key={index}
+                      className="bg-background/50 backdrop-blur-sm rounded-xl p-6 border border-black/[.08] dark:border-white/[.145] hover:scale-[1.02] transition-all duration-300"
+                    >
+                      <div className="flex items-center gap-4">
+                        <div className="relative w-16 h-16 rounded-full overflow-hidden bg-surface">
+                          <img 
+                            src={member.image} 
+                            alt={member.name}
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                        <div>
+                          <h3 className="font-semibold text-lg">{member.name}</h3>
+                          <p className="text-primary text-sm font-medium mb-1">{member.role}</p>
+                          <a href={`mailto:${member.email}`} className="text-gray text-sm hover:text-primary transition-colors">
+                            {member.email}
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            );
+          })}
         </section>
       )}
 
       {activeTab === 'faq' && (
-        <section className="bg-surface p-8 rounded-lg max-w-4xl mx-auto">
+        <section className="bg-surface/50 backdrop-blur-xl rounded-2xl border border-black/[.08] dark:border-white/[.145] p-8">
           <SectionTitle>Preguntas Frecuentes</SectionTitle>
-          <div className="space-y-6">
+          <div className="space-y-6 mt-8">
             {displayedFaq.map((item, index) => (
-              <PreviewCard
+              <div 
                 key={index}
-                title=""
-                onViewAll={() => {}}
-                items={[item]}
-                type="faq"
-              />
+                className="bg-background/50 backdrop-blur-sm rounded-xl p-6 border border-black/[.08] dark:border-white/[.145] hover:scale-[1.01] transition-all duration-300"
+              >
+                <h3 className="font-semibold text-lg mb-3">{item.question}</h3>
+                <p className="text-gray leading-relaxed">{item.answer}</p>
+              </div>
             ))}
           </div>
           {faqItems.length > ITEMS_PER_PAGE && (
-            <div className="mt-6 text-center">
+            <div className="mt-8 text-center">
               <button
                 onClick={() => setShowAllFaq(!showAllFaq)}
-                className="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-all duration-200 transform hover:scale-105 hover:shadow-lg"
+                className="px-6 py-2.5 bg-primary text-white rounded-xl hover:bg-primary/90 transition-all duration-200 transform hover:scale-105 hover:shadow-lg text-sm font-medium"
               >
                 {showAllFaq ? 'Ver menos' : 'Ver más'}
               </button>
