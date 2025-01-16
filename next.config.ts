@@ -17,13 +17,17 @@ const config: NextConfig = {
           {
             key: 'Content-Security-Policy',
             value: [
-              "default-src 'self' https://ceitba.org.ar",
+              "default-src 'self'",
               "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://accounts.google.com",
               "style-src 'self' 'unsafe-inline'",
               "img-src 'self' data: https: http:",
+              "font-src 'self'",
               "connect-src 'self' https://accounts.google.com https://ceitba.org.ar",
               "frame-src 'self' https://accounts.google.com",
               "form-action 'self' https://accounts.google.com",
+              "base-uri 'self'",
+              "object-src 'none'",
+              "media-src 'self'"
             ].join('; '),
           },
           {
@@ -38,6 +42,10 @@ const config: NextConfig = {
             key: 'Referrer-Policy',
             value: 'origin-when-cross-origin',
           },
+          {
+            key: 'Permissions-Policy',
+            value: 'camera=(), microphone=(), geolocation=()'
+          }
         ],
       },
     ];

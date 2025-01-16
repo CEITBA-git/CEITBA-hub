@@ -23,7 +23,8 @@ export const authOptions: NextAuthOptions = {
   },
   pages: {
     signIn: '/minecraft',
-    error: '/minecraft'
+    error: '/minecraft',
+    signOut: '/minecraft'
   },
   callbacks: {
     async signIn({ account, profile }) {
