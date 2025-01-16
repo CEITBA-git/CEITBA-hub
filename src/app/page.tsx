@@ -72,7 +72,13 @@ export default function Home() {
     const observerCallback = (entries: IntersectionObserverEntry[]) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
-          setVisibleSections(prev => [...prev, entry.target.id]);
+          setVisibleSections(prev => 
+            prev.includes(entry.target.id) ? prev : [...prev, entry.target.id]
+          );
+        } else {
+          setVisibleSections(prev => 
+            prev.filter(id => id !== entry.target.id)
+          );
         }
       });
     };
@@ -95,9 +101,11 @@ export default function Home() {
     <Layout activeTab={activeTab} onTabChange={setActiveTab}>
       {/* Hero Section */}
       <section id="hero" className={`text-center mb-24 transition-all duration-1000 transform ${isVisible('hero') ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}>
-        <h1 className="text-4xl md:text-5xl font-bold mb-6">Bienvenido al Portal CEITBA</h1>
+        <h1 className="text-4xl md:text-5xl font-bold mb-6">
+          Bienvenido al CEITBA ✨
+        </h1>
         <p className="text-xl text-gray max-w-3xl mx-auto">
-          Tu plataforma central para acceder a todos los recursos e información del CEITBA
+          Descubrí todos los servicios y beneficios que tenemos para vos 🚀
         </p>
       </section>
 
