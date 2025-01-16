@@ -16,7 +16,7 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           username: ${{ secrets.SSH_USERNAME }} 
           script: |
-            cd hub/
+            cd CEITBA-hub/
             git pull https://CEITBA-git:${{ secrets.GITHUB_TOKEN}}@github.com/CEITBA-git/CEITBA-hub.git
             sudo npm install
             sudo npm run build
