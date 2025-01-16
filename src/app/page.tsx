@@ -33,24 +33,34 @@ const faqItems = [
 
 const departments = [
   {
-    title: 'Departamento Académico',
-    description: 'Trabajamos para mejorar la calidad educativa y representar a los estudiantes en cuestiones académicas.',
-    icon: '📚'
-  },
-  {
-    title: 'Departamento de Bienestar',
-    description: 'Nos ocupamos de la salud mental y física de los estudiantes, organizando actividades y brindando apoyo.',
-    icon: '🌟'
-  },
-  {
-    title: 'Departamento de Cultura',
-    description: 'Promovemos actividades culturales y artísticas para enriquecer la vida universitaria.',
-    icon: '🎭'
-  },
-  {
-    title: 'Departamento de Deportes',
-    description: 'Organizamos eventos deportivos y fomentamos la actividad física en la comunidad.',
+    title: 'Deportes',
+    description: 'Organizamos y gestionamos todas las actividades deportivas: fútbol, básquet, tenis, ping pong, ajedrez, esports, natación y más. ¡Fomentamos el deporte en la comunidad ITBA!',
     icon: '⚽'
+  },
+  {
+    title: 'Náutica',
+    description: 'Gestionamos el barco del ITBA y todas las actividades relacionadas con la náutica, brindando una experiencia única para los estudiantes.',
+    icon: '⛵'
+  },
+  {
+    title: 'Media',
+    description: 'Nos encargamos de la imagen del Centro y la comunicación efectiva con los alumnos, manteniendo a la comunidad informada y conectada.',
+    icon: '📱'
+  },
+  {
+    title: 'IT',
+    description: 'Desarrollamos y mantenemos las soluciones tecnológicas del Centro, trabajando en proyectos informáticos para mejorar la experiencia estudiantil.',
+    icon: '💻'
+  },
+  {
+    title: 'Infraestructura y Proyectos',
+    description: 'Gestionamos proyectos de mejora y mantenemos la infraestructura existente, trabajando constantemente para optimizar los espacios y recursos.',
+    icon: '🔧'
+  },
+  {
+    title: 'Eventos y Cultura',
+    description: 'Organizamos eventos propuestos por alumnos y fomentamos actividades culturales, incluyendo intercambios de idiomas y otras iniciativas estudiantiles.',
+    icon: '🎭'
   }
 ];
 
