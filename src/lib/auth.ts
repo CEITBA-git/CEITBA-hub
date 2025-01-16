@@ -58,7 +58,7 @@ export const authOptions: NextAuthOptions = {
         sameSite: 'lax',
         path: '/',
         secure: process.env.NODE_ENV === 'production',
-        domain: process.env.NODE_ENV === 'production' ? 'ceitba.org.ar' : undefined
+        domain: undefined // Let the browser handle the domain
       }
     },
     callbackUrl: {
@@ -67,7 +67,7 @@ export const authOptions: NextAuthOptions = {
         sameSite: 'lax',
         path: '/',
         secure: process.env.NODE_ENV === 'production',
-        domain: process.env.NODE_ENV === 'production' ? 'ceitba.org.ar' : undefined
+        domain: undefined
       }
     },
     csrfToken: {

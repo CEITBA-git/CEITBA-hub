@@ -17,16 +17,28 @@ const config: NextConfig = {
         source: '/:path*',
         headers: [
           {
+            key: 'Access-Control-Allow-Origin',
+            value: process.env.NODE_ENV === 'production' ? 'https://ceitba.org.ar' : 'http://localhost:3000'
+          },
+          {
+            key: 'Access-Control-Allow-Methods',
+            value: 'GET, POST, PUT, DELETE, OPTIONS'
+          },
+          {
+            key: 'Access-Control-Allow-Headers',
+            value: 'Content-Type, Authorization'
+          },
+          {
             key: 'Content-Security-Policy',
             value: [
-              "default-src 'self' https://ceitba.org.ar",
-              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://accounts.google.com https://ceitba.org.ar",
-              "style-src 'self' 'unsafe-inline' https://ceitba.org.ar",
+              "default-src 'self'",
+              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://accounts.google.com",
+              "style-src 'self' 'unsafe-inline'",
               "img-src 'self' data: https: http:",
-              "font-src 'self' https://ceitba.org.ar data:",
-              "connect-src 'self' https://accounts.google.com https://ceitba.org.ar",
+              "font-src 'self' data:",
+              "connect-src 'self' https://accounts.google.com",
               "frame-src 'self' https://accounts.google.com",
-              "form-action 'self' https://accounts.google.com https://ceitba.org.ar",
+              "form-action 'self' https://accounts.google.com",
               "base-uri 'self'",
               "object-src 'none'",
               "media-src 'self'"
@@ -60,7 +72,7 @@ const config: NextConfig = {
         ]
       },
       {
-        source: '/:path*',
+        source: '/api/:path*',
         headers: [
           {
             key: 'Cache-Control',
@@ -72,7 +84,7 @@ const config: NextConfig = {
   },
   experimental: {
     serverActions: {
-      allowedOrigins: ['ceitba.org.ar', 'localhost:3000']
+      allowedOrigins: process.env.NODE_ENV === 'production' ? ['ceitba.org.ar'] : ['localhost:3000']
     }
   }
 };
