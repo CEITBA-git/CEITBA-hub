@@ -54,7 +54,7 @@ export default function MinecraftPage() {
     }
 
     try {
-      const response = await fetch('/api/minecraft/whitelist', {
+      const response = await fetch('/minecraft/whitelist', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -60,7 +60,7 @@ const config: NextConfig = {
         ]
       },
       {
-        source: '/api/:path*',
+        source: '/:path*',
         headers: [
           {
             key: 'Cache-Control',
