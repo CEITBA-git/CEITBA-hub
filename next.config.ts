@@ -1,6 +1,8 @@
 import { NextConfig } from 'next';
 
 const config: NextConfig = {
+  output: 'standalone',
+  poweredByHeader: false,
   images: {
     remotePatterns: [
       {
@@ -21,7 +23,7 @@ const config: NextConfig = {
               "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://accounts.google.com https://ceitba.org.ar",
               "style-src 'self' 'unsafe-inline' https://ceitba.org.ar",
               "img-src 'self' data: https: http:",
-              "font-src 'self' https://ceitba.org.ar",
+              "font-src 'self' https://ceitba.org.ar data:",
               "connect-src 'self' https://accounts.google.com https://ceitba.org.ar",
               "frame-src 'self' https://accounts.google.com",
               "form-action 'self' https://accounts.google.com https://ceitba.org.ar",
@@ -48,8 +50,31 @@ const config: NextConfig = {
           }
         ],
       },
+      {
+        source: '/_next/static/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable'
+          }
+        ]
+      },
+      {
+        source: '/api/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'no-store, max-age=0'
+          }
+        ]
+      }
     ];
   },
+  experimental: {
+    serverActions: {
+      allowedOrigins: ['ceitba.org.ar', 'localhost:3000']
+    }
+  }
 };
 
 export default config;
