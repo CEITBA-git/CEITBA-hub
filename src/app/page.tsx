@@ -9,8 +9,8 @@ import SectionTitle from './components/SectionTitle';
 import staffData from '@/data/staff.json';
 import faqData from '@/data/faq.json';
 
-// Get a few preview items
-const previewStaff = [...staffData.directivos, ...staffData.departamentos].slice(0, 3);
+// Get preview items
+const previewStaff = staffData.directivos; // Show all directivos
 const previewFaq = faqData.items.slice(0, 3);
 
 const departments = [
