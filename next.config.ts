@@ -17,14 +17,14 @@ const config: NextConfig = {
           {
             key: 'Content-Security-Policy',
             value: [
-              "default-src 'self'",
-              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://accounts.google.com",
-              "style-src 'self' 'unsafe-inline'",
+              "default-src 'self' https://ceitba.org.ar",
+              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://accounts.google.com https://ceitba.org.ar",
+              "style-src 'self' 'unsafe-inline' https://ceitba.org.ar",
               "img-src 'self' data: https: http:",
-              "font-src 'self'",
+              "font-src 'self' https://ceitba.org.ar",
               "connect-src 'self' https://accounts.google.com https://ceitba.org.ar",
               "frame-src 'self' https://accounts.google.com",
-              "form-action 'self' https://accounts.google.com",
+              "form-action 'self' https://accounts.google.com https://ceitba.org.ar",
               "base-uri 'self'",
               "object-src 'none'",
               "media-src 'self'"

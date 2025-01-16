@@ -23,18 +23,18 @@ export const authOptions: NextAuthOptions = {
   },
   pages: {
     signIn: '/minecraft',
-    error: '/minecraft',
+    error: '/minecraft?error=true',
     signOut: '/minecraft'
   },
   callbacks: {
     async signIn({ account, profile }) {
       if (!account || !profile?.email) {
-        return false;
+        return '/minecraft?error=no_account';
       }
       if (account.provider === "google") {
-        return profile.email.endsWith("@itba.edu.ar");
+        return profile.email.endsWith("@itba.edu.ar") || '/minecraft?error=invalid_domain';
       }
-      return false;
+      return '/minecraft?error=invalid_provider';
     },
     async session({ session, token }) {
       if (session?.user) {
