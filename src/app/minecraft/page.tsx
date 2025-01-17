@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { signIn, useSession } from 'next-auth/react';
 import Layout from '../components/Layout';
 import SectionTitle from '../components/SectionTitle';
@@ -13,6 +13,15 @@ export default function MinecraftPage() {
   const [rulesAccepted, setRulesAccepted] = useState(false);
   const [error, setError] = useState('');
   const [copied, setCopied] = useState(false);
+  const [approved, setApproved] = useState(false);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('approved') === 'true') {
+      setApproved(true);
+      setStep(4); // Skip to step 4 if approved
+    }
+  }, []);
 
   const validateMinecraftUsername = (username: string) => {
     // Minecraft usernames can only contain letters, numbers, and underscores
@@ -32,7 +41,7 @@ export default function MinecraftPage() {
   const handleGoogleSignIn = async () => {
     try {
       await signIn('google', {
-        callbackUrl: '/minecraft',
+        callbackUrl: '/minecraft?approved=true',
         redirect: true,
       });
     } catch (err) {
@@ -121,6 +130,12 @@ export default function MinecraftPage() {
           </div>
         )}
 
+        {approved && (
+          <div className="mb-6 p-4 bg-green-50 border border-green-200 text-green-600 rounded-xl text-sm">
+            ¡Tu cuenta ha sido aprobada!
+          </div>
+        )}
+
         <div className="bg-surface/50 backdrop-blur-sm rounded-xl border border-black/[.08] dark:border-white/[.145] p-8">
           <div className="flex justify-between mb-8">
             {[1, 2, 3].map((stepNumber) => (
@@ -145,6 +160,7 @@ export default function MinecraftPage() {
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
+
             {step === 1 && (
               <div className="space-y-4">
                 <h3 className="text-xl font-semibold mb-4">Usuario de Minecraft</h3>
@@ -338,4 +354,4 @@ export default function MinecraftPage() {
       </div>
     </Layout>
   );
-} 
+}

@@ -32,7 +32,9 @@ export const authOptions: NextAuthOptions = {
         return '/minecraft?error=no_account';
       }
       if (account.provider === "google") {
-        return profile.email.endsWith("@itba.edu.ar") || '/minecraft?error=invalid_domain';
+        return profile.email.endsWith("@itba.edu.ar")
+          ? '/minecraft?approved=true'
+          : '/minecraft?error=invalid_domain';
       }
       return '/minecraft?error=invalid_provider';
     },
