@@ -63,13 +63,13 @@ export default function MinecraftPage() {
     }
 
     try {
-      const response = await fetch('/minecraft/whitelist', {
+      const response = await fetch('/api/v1/minecraft/whitelist', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          minecraftUsername,
+          minecraftUsername: minecraftUsername,
           email: session.user.email,
         }),
       });
