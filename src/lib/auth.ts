@@ -29,12 +29,19 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async signIn({ account, profile }) {
       if (!account || !profile?.email) {
-        return '/minecraft?error=no_account';
+        return false;
       }
       if (account.provider === "google") {
-        return profile.email.endsWith("@itba.edu.ar") || '/minecraft?error=invalid_domain';
+        return profile.email.endsWith("@itba.edu.ar");
       }
-      return '/minecraft?error=invalid_provider';
+      return false;
+    },
+    async redirect({ url, baseUrl }) {
+      // Allows relative callback URLs
+      if (url.startsWith("/")) return `${baseUrl}${url}`
+      // Allows callback URLs on the same origin
+      else if (new URL(url).origin === baseUrl) return url
+      return baseUrl
     },
     async session({ session, token }) {
       if (session?.user) {
@@ -58,7 +65,6 @@ export const authOptions: NextAuthOptions = {
         sameSite: 'lax',
         path: '/',
         secure: process.env.NODE_ENV === 'production',
-        domain: undefined // Let the browser handle the domain
       }
     },
     callbackUrl: {
@@ -67,7 +73,6 @@ export const authOptions: NextAuthOptions = {
         sameSite: 'lax',
         path: '/',
         secure: process.env.NODE_ENV === 'production',
-        domain: undefined
       }
     },
     csrfToken: {
