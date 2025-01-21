@@ -63,7 +63,7 @@ export default function MinecraftPage() {
     }
 
     try {
-      const response = await fetch('/api/v1/minecraft/whitelist', {
+      const response = await fetch('https://ceitba.org.ar/api/v1/minecraft/whitelist', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
