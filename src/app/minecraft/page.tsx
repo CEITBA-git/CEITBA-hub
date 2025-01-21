@@ -56,11 +56,7 @@ export default function MinecraftPage() {
         }
       };
 
-      if (minecraftUsername && validateMinecraftUsername(minecraftUsername)) {
         submitRegistration();
-      } else {
-        setStep(1); // If no valid username, start from step 1
-      }
     }
   }, [session, minecraftUsername]);
 
