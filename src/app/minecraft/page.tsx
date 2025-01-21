@@ -18,45 +18,58 @@ export default function MinecraftPage() {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     if (params.get('approved') === 'true' && session?.user?.email) {
-      const submitRegistration = async () => {
-        try {
-          if (!session.user) return;
-          
-          const response = await fetch('https://ceitba.org.ar/api/v1/minecraft/whitelist', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              minecraftUsername: minecraftUsername,
-              email: session.user.email,
-            }),
-          });
+      // Load the stored username if it exists
+      const storedUsername = localStorage.getItem('pendingMinecraftUsername');
+      if (storedUsername) {
+        setMinecraftUsername(storedUsername);
+        localStorage.removeItem('pendingMinecraftUsername'); // Clean up
+      }
+      
+      // If we have a valid username, submit the registration
+      if (minecraftUsername && validateMinecraftUsername(minecraftUsername)) {
+        const submitRegistration = async () => {
+          try {
+            if (!session.user) return;
+            
+            const response = await fetch('https://ceitba.org.ar/api/v1/minecraft/whitelist', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                minecraftUsername: minecraftUsername,
+                email: session.user.email,
+              }),
+            });
 
-          const data = await response.json();
+            const data = await response.json();
 
-          if (!response.ok) {
-            if (data.error === 'Ya tienes una cuenta de Minecraft registrada') {
-              setError('Ya tienes una cuenta de Minecraft registrada. No puedes registrar múltiples cuentas.');
-              return;
+            if (!response.ok) {
+              if (data.error === 'Ya tienes una cuenta de Minecraft registrada') {
+                setError('Ya tienes una cuenta de Minecraft registrada. No puedes registrar múltiples cuentas.');
+                return;
+              }
+              if (data.error === 'Este nombre de usuario de Minecraft ya está registrado') {
+                setError('Este nombre de usuario de Minecraft ya está registrado por otro usuario.');
+                return;
+              }
+              throw new Error(data.error || 'Error al agregar a la whitelist');
             }
-            if (data.error === 'Este nombre de usuario de Minecraft ya está registrado') {
-              setError('Este nombre de usuario de Minecraft ya está registrado por otro usuario.');
-              return;
-            }
-            throw new Error(data.error || 'Error al agregar a la whitelist');
+
+            setApproved(true);
+            setStep(4);
+          } catch (err) {
+            console.error('Error al procesar la solicitud:', err);
+            setError('Error al procesar tu solicitud. Por favor, intenta nuevamente.');
+            setStep(3);
           }
-
-          setApproved(true);
-          setStep(4);
-        } catch (err) {
-          console.error('Error al procesar la solicitud:', err);
-          setError('Error al procesar tu solicitud. Por favor, intenta nuevamente.');
-          setStep(3);
-        }
-      };
+        };
 
         submitRegistration();
+      } else {
+        // If we don't have a username yet, start from step 1
+        setStep(1);
+      }
     }
   }, [session, minecraftUsername]);
 
@@ -77,6 +90,10 @@ export default function MinecraftPage() {
 
   const handleGoogleSignIn = async () => {
     try {
+      // Store the current username in localStorage before redirecting
+      if (minecraftUsername && validateMinecraftUsername(minecraftUsername)) {
+        localStorage.setItem('pendingMinecraftUsername', minecraftUsername);
+      }
       await signIn('google', {
         callbackUrl: '/minecraft?approved=true',
         redirect: true,
