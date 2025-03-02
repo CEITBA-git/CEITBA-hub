@@ -24,6 +24,9 @@ export default function Topbar({ activeTab, onTabChange }: TopbarProps) {
       case 'faq':
         router.push('/faq');
         break;
+      case 'benefits':
+        router.push('/beneficios');
+        break;
     }
   };
 
@@ -57,6 +60,14 @@ export default function Topbar({ activeTab, onTabChange }: TopbarProps) {
                 }`}
               >
                 FAQ
+              </button>
+              <button
+                onClick={() => handleTabChange('benefits')}
+                className={`text-sm lg:text-base transition-colors ${
+                  activeTab === 'benefits' ? 'text-primary' : 'text-gray hover:text-textDefault'
+                }`}
+              >
+                Beneficios
               </button>
             </nav>
             <ThemeSwitcher />

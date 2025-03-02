@@ -1,0 +1,70 @@
+{
+  "sports": [
+    {
+      "id": "futbol",
+      "name": "Fútbol",
+      "inscription_url": "https://forms.gle/futbol",
+      "max_capacity": 22,
+      "schedule": "Martes y Jueves 18:00-20:00",
+      "place": "Club GEBA",
+      "place_url": "https://maps.google.com/geba",
+      "teachers": "Juan Pérez, Carlos García",
+      "notes": "Traer botines y ropa deportiva"
+    },
+    {
+      "id": "basket",
+      "name": "Básquet",
+      "inscription_url": "https://forms.gle/basket",
+      "max_capacity": 15,
+      "schedule": "Lunes y Miércoles 19:00-21:00",
+      "place": "Polideportivo ITBA",
+      "place_url": "https://maps.google.com/itba",
+      "teachers": "María López",
+      "notes": "Se proveen pelotas"
+    }
+  ],
+  "agreements": [
+    {
+      "id": "gym-1",
+      "name": "Megatlon",
+      "inscription_url": "https://megatlon.com/itba",
+      "max_capacity": 100,
+      "schedule": "Lunes a Domingo 8:00-22:00",
+      "place": "Todas las sedes",
+      "place_url": "https://megatlon.com/sedes",
+      "teachers": "Staff Megatlon",
+      "notes": "40% de descuento para alumnos ITBA",
+      "price": 8000
+    },
+    {
+      "id": "gym-2",
+      "name": "SportClub",
+      "inscription_url": "https://sportclub.com/itba",
+      "max_capacity": 100,
+      "schedule": "Lunes a Domingo 7:00-23:00",
+      "place": "Todas las sedes",
+      "place_url": "https://sportclub.com/sedes",
+      "teachers": "Staff SportClub",
+      "notes": "35% de descuento para alumnos ITBA",
+      "price": 7500
+    }
+  ],
+  "languages": [
+    {
+      "id": "eng-1",
+      "name": "Inglés",
+      "inscription_url": "https://forms.gle/ingles",
+      "notes": "Certificación internacional disponible",
+      "levels": "A1, A2, B1, B2, C1, C2",
+      "prices": "Nivel básico: $5000, Intermedio: $6000, Avanzado: $7000"
+    },
+    {
+      "id": "port-1",
+      "name": "Portugués",
+      "inscription_url": "https://forms.gle/portugues",
+      "notes": "Grupos reducidos",
+      "levels": "Básico, Intermedio, Avanzado",
+      "prices": "Todos los niveles: $5500"
+    }
+  ]
+} 
