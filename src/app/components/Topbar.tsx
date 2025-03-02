@@ -25,7 +25,7 @@ export default function Topbar({ activeTab, onTabChange }: TopbarProps) {
         router.push('/faq');
         break;
       case 'benefits':
-        router.push('/beneficios');
+        router.push('/benefits');
         break;
     }
   };
