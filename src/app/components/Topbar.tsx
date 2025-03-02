@@ -1,5 +1,7 @@
 import ThemeSwitcher from './ThemeSwitcher';
 import { useRouter } from 'next/navigation';
+import { useState, useEffect } from 'react';
+import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 
 interface TopbarProps {
   activeTab: string;
@@ -8,11 +10,18 @@ interface TopbarProps {
 
 export default function Topbar({ activeTab, onTabChange }: TopbarProps) {
   const router = useRouter();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   const handleTabChange = (tab: string) => {
     if (onTabChange) {
       onTabChange(tab);
     }
+    setIsMenuOpen(false);
     
     switch (tab) {
       case 'inicio':
@@ -43,11 +52,63 @@ export default function Topbar({ activeTab, onTabChange }: TopbarProps) {
             </h2>
           </button>
           
-          <div className="flex items-center space-x-6">
-            <nav className="hidden md:flex space-x-6">
+          <div className="flex items-center">
+            <div className="md:hidden">
+              <ThemeSwitcher />
+            </div>
+
+            <div className="hidden md:flex items-center space-x-6">
+              <nav className="flex space-x-6">
+                <button
+                  onClick={() => handleTabChange('staff')}
+                  className={`text-sm lg:text-base transition-colors ${
+                    activeTab === 'staff' ? 'text-primary' : 'text-gray hover:text-textDefault'
+                  }`}
+                >
+                  Miembros
+                </button>
+                <button
+                  onClick={() => handleTabChange('faq')}
+                  className={`text-sm lg:text-base transition-colors ${
+                    activeTab === 'faq' ? 'text-primary' : 'text-gray hover:text-textDefault'
+                  }`}
+                >
+                  FAQ
+                </button>
+                <button
+                  onClick={() => handleTabChange('benefits')}
+                  className={`text-sm lg:text-base transition-colors ${
+                    activeTab === 'benefits' ? 'text-primary' : 'text-gray hover:text-textDefault'
+                  }`}
+                >
+                  Beneficios
+                </button>
+              </nav>
+              <ThemeSwitcher />
+            </div>
+
+            {isMounted && (
+              <button
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+                className="block md:hidden ml-6"
+                aria-label="Menu"
+              >
+                {isMenuOpen ? (
+                  <XMarkIcon className="h-6 w-6 text-textDefault" />
+                ) : (
+                  <Bars3Icon className="h-6 w-6 text-textDefault" />
+                )}
+              </button>
+            )}
+          </div>
+        </div>
+
+        {isMounted && (
+          <div className={`md:hidden transition-all duration-300 ease-in-out ${isMenuOpen ? 'max-h-48 opacity-100' : 'max-h-0 opacity-0'} overflow-hidden`}>
+            <nav className="flex flex-col space-y-4 pb-6">
               <button
                 onClick={() => handleTabChange('staff')}
-                className={`text-sm lg:text-base transition-colors ${
+                className={`text-sm transition-colors text-left ${
                   activeTab === 'staff' ? 'text-primary' : 'text-gray hover:text-textDefault'
                 }`}
               >
@@ -55,7 +116,7 @@ export default function Topbar({ activeTab, onTabChange }: TopbarProps) {
               </button>
               <button
                 onClick={() => handleTabChange('faq')}
-                className={`text-sm lg:text-base transition-colors ${
+                className={`text-sm transition-colors text-left ${
                   activeTab === 'faq' ? 'text-primary' : 'text-gray hover:text-textDefault'
                 }`}
               >
@@ -63,16 +124,15 @@ export default function Topbar({ activeTab, onTabChange }: TopbarProps) {
               </button>
               <button
                 onClick={() => handleTabChange('benefits')}
-                className={`text-sm lg:text-base transition-colors ${
+                className={`text-sm transition-colors text-left ${
                   activeTab === 'benefits' ? 'text-primary' : 'text-gray hover:text-textDefault'
                 }`}
               >
                 Beneficios
               </button>
             </nav>
-            <ThemeSwitcher />
           </div>
-        </div>
+        )}
       </div>
     </header>
   );
