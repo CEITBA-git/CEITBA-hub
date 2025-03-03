@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { supabase } from '@/lib/supabase';
 
 export type Role = 'admin' | 'sports' | 'organization' | 'member';
 
@@ -18,8 +19,9 @@ interface UserState {
   error: string | null;
   hasRole: (role: Role) => boolean;
   hasAnyRole: (roles: Role[]) => boolean;
-  login: (email: string, password: string) => Promise<boolean>;
-  logout: () => void;
+  setUser: (user: User) => void;
+  clearUser: () => void;
+  logout: () => Promise<void>;
   checkAuth: () => Promise<boolean>;
 }
 
@@ -68,47 +70,44 @@ export const useUserStore = create<UserState>()(
         return roles.some(role => user.roles.includes(role));
       },
       
-      login: async (email, password) => {
-        set({ isLoading: true, error: null });
-        
-        try {
-          // Simulate API call delay
-          await new Promise(resolve => setTimeout(resolve, 1000));
-          
-          // Find user with matching credentials
-          const user = mockUsers.find(
-            u => u.email === email && u.password === password
-          );
-          
-          if (user) {
-            // Remove password from user object before storing
-            const { password, ...userWithoutPassword } = user;
-            set({ user: userWithoutPassword as User, isAuthenticated: true, isLoading: false });
-            return true;
-          } else {
-            set({ 
-              error: 'Credenciales incorrectas. Por favor verifica tu email y contraseña.', 
-              isLoading: false 
-            });
-            return false;
-          }
-        } catch (error) {
-          set({ 
-            error: 'Error al iniciar sesión. Por favor intenta nuevamente.', 
-            isLoading: false 
-          });
-          return false;
-        }
+      setUser: (user: User) => {
+        set({ user, isAuthenticated: true, error: null });
       },
       
-      logout: () => {
+      clearUser: () => {
         set({ user: null, isAuthenticated: false, error: null });
       },
       
+      logout: async () => {
+        try {
+          await supabase.auth.signOut();
+          set({ user: null, isAuthenticated: false, error: null });
+        } catch (error: any) {
+          set({ error: error.message });
+        }
+      },
+      
       checkAuth: async () => {
-        // In a real app, this would verify the token with the server
-        const { user } = get();
-        return !!user;
+        try {
+          const { data: { session } } = await supabase.auth.getSession();
+          if (session) {
+            const { user } = session;
+            set({
+              user: {
+                id: user.id,
+                email: user.email || '',
+                name: user.user_metadata.full_name || user.email?.split('@')[0] || '',
+                roles: user.user_metadata.roles || ['member'],
+                avatar: user.user_metadata.avatar_url
+              },
+              isAuthenticated: true
+            });
+            return true;
+          }
+          return false;
+        } catch (error) {
+          return false;
+        }
       }
     }),
     {
