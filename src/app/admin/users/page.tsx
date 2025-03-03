@@ -13,27 +13,27 @@ import AdminSearchFilter from '@/app/components/admin/AdminSearchFilter';
 export default function UsersAdminPage() {
   const [searchQuery, setSearchQuery] = useState('');
   
-  // Sample users data for the table
+  // Datos de ejemplo para la tabla de usuarios
   const usersData = [
     {
       id: '1',
-      name: 'John Doe',
-      initials: 'JD',
-      email: 'john.doe@example.com',
+      name: 'Juan Pérez',
+      initials: 'JP',
+      email: 'juan.perez@example.com',
       roles: ['Admin'],
-      status: 'Active'
+      status: 'Activo'
     },
     {
       id: '2',
-      name: 'Jane Smith',
-      initials: 'JS',
-      email: 'jane.smith@example.com',
-      roles: ['Sports'],
-      status: 'Active'
+      name: 'María García',
+      initials: 'MG',
+      email: 'maria.garcia@example.com',
+      roles: ['Deportes'],
+      status: 'Activo'
     }
   ];
 
-  // Filter users based on search query
+  // Filtrar usuarios según la búsqueda
   const filteredUsers = usersData.filter(user => {
     if (!searchQuery) return true;
     
@@ -45,10 +45,10 @@ export default function UsersAdminPage() {
     );
   });
 
-  // Table columns configuration
+  // Configuración de columnas para la tabla
   const columns = [
     {
-      header: 'Name',
+      header: 'Nombre',
       accessor: 'name',
       cell: (user: any) => (
         <div className="flex items-center">
@@ -87,7 +87,7 @@ export default function UsersAdminPage() {
       )
     },
     {
-      header: 'Status',
+      header: 'Estado',
       accessor: 'status',
       cell: (user: any) => (
         <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
@@ -96,12 +96,12 @@ export default function UsersAdminPage() {
       )
     },
     {
-      header: 'Actions',
+      header: 'Acciones',
       accessor: 'actions',
       cell: () => (
         <div className="text-right">
           <AdminButton variant="secondary" size="sm">
-            Edit
+            Editar
           </AdminButton>
         </div>
       )
@@ -112,11 +112,11 @@ export default function UsersAdminPage() {
     <ProtectedRoute allowedRoles={['admin']}>
       <AdminLayout>
         <AdminPageHeader 
-          title="User Management" 
-          description="Manage user accounts and permissions"
+          title="Gestión de Usuarios" 
+          description="Administra cuentas de usuario y permisos"
           action={
             <AdminButton>
-              Add User
+              Agregar Usuario
             </AdminButton>
           }
         />
@@ -125,14 +125,14 @@ export default function UsersAdminPage() {
           <AdminSearchFilter
             value={searchQuery}
             onChange={setSearchQuery}
-            placeholder="Search users..."
+            placeholder="Buscar usuarios..."
           />
         </div>
         
         <AdminCard>
           <AdminCardHeader 
-            title="Users" 
-            description="All registered users in the system"
+            title="Usuarios" 
+            description="Todos los usuarios registrados en el sistema"
           />
           <AdminTable 
             columns={columns}
