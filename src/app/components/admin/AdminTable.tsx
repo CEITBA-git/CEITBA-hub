@@ -24,7 +24,7 @@ const AdminTable: React.FC<AdminTableProps> = ({
   return (
     <div className="overflow-x-auto">
       <table className="min-w-full">
-        <thead className="bg-surface/50">
+        <thead className="bg-surface">
           <tr>
             {columns.map((column, index) => (
               <th 
@@ -37,7 +37,7 @@ const AdminTable: React.FC<AdminTableProps> = ({
             ))}
           </tr>
         </thead>
-        <tbody className="bg-background divide-y divide-gray/5">
+        <tbody className="bg-background divide-y divide-gray-100">
           {data.length > 0 ? (
             data.map((item, rowIndex) => (
               <tr 

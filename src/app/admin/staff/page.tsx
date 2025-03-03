@@ -85,7 +85,8 @@ export default function StaffManagement() {
     department: 'Deportes',
     status: 'Activo',
     date_start: '',
-    date_end: ''
+    date_end: '',
+    userId: ''
   });
   
   // Get role options based on department
@@ -117,12 +118,16 @@ export default function StaffManagement() {
     
     // Generar un ID único si no se proporciona uno
     const staffId = Date.now().toString();
+    // Generar un userId único (en un caso real, esto vendría de la base de datos)
+    const userId = `user_${Date.now()}`;
     
     setStaffMembers([
       ...staffMembers,
       {
         ...newStaff,
-        id: staffId
+        id: staffId,
+        userId: userId,
+        date_end: newStaff.date_end || null
       }
     ]);
     
@@ -152,7 +157,8 @@ export default function StaffManagement() {
       department: staff.department,
       status: staff.status,
       date_start: staff.date_start,
-      date_end: staff.date_end || ''
+      date_end: staff.date_end || '',
+      userId: staff.userId
     });
     setEditingId(staff.id);
     setIsAddingStaff(true);
@@ -166,7 +172,8 @@ export default function StaffManagement() {
       department: 'Deportes',
       status: 'Activo',
       date_start: '',
-      date_end: ''
+      date_end: '',
+      userId: ''
     });
     setEditingId(null);
     setIsAddingStaff(false);
