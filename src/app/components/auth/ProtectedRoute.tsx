@@ -2,51 +2,50 @@
 
 import { useEffect, useState, ReactNode } from 'react';
 import { useRouter } from 'next/navigation';
-import { useUserStore } from '@/stores/userStore';
+import { useUserStore } from '@/stores/user/userStore';
+import { AllowedRoles } from '@/stores/user/modules';
 
 interface ProtectedRouteProps {
   children: ReactNode;
-  allowedRoles?: string[];
+  allowedRoles?: AllowedRoles[];
 }
 
 export const ProtectedRoute = ({ children, allowedRoles = [] }: ProtectedRouteProps) => {
   const router = useRouter();
-  const { user, checkAuth } = useUserStore();
+  const { user, checkAuth, hasAnyRole } = useUserStore();
   const [isAuthorized, setIsAuthorized] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const verifyAuth = async () => {
+    const verifyAuth = () => {
       setIsLoading(true);
       
       // Check if user is authenticated
-      const isAuthenticated = await checkAuth();
-      
-      if (!isAuthenticated) {
-        // Redirect to login page with return URL
-        router.push(`/login?returnUrl=${encodeURIComponent(window.location.pathname)}`);
-        return;
-      }
-      
-      // Check if user has required role
-      if (allowedRoles.length > 0) {
-        const hasRequiredRole = user?.roles?.some((role: string) => 
-          allowedRoles.includes(role)
-        );
-        
-        if (!hasRequiredRole) {
-          setIsAuthorized(false);
+      checkAuth()
+        .then(isAuthenticated => {
+          if (!isAuthenticated) {
+            // Redirect to login page with return URL
+            router.push(`/login?returnUrl=${encodeURIComponent(window.location.pathname)}`);
+            return;
+          }
+          
+          // Check if user has required role
+          if (allowedRoles.length > 0) {
+            if (hasAnyRole(allowedRoles)) {
+              setIsAuthorized(true);
+            } else {
+              setIsAuthorized(false);
+            }
+          } else {
+            setIsAuthorized(true);
+          }
+          
           setIsLoading(false);
-          return;
-        }
-      }
-      
-      setIsAuthorized(true);
-      setIsLoading(false);
+        });
     };
     
     verifyAuth();
-  }, [user, router, allowedRoles, checkAuth]);
+  }, [user, router, allowedRoles, checkAuth, hasAnyRole]);
 
   if (isLoading) {
     return (

@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useUserStore } from '@/stores/userStore';
+import { useUserStore } from '@/stores/user/userStore';
 
 interface AdminLayoutProps {
   children: React.ReactNode;

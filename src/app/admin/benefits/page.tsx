@@ -3,7 +3,7 @@
 import React, { useState, useCallback } from 'react';
 import AdminLayout from '@/app/components/layout/AdminLayout';
 import { ProtectedRoute } from '@/app/components/auth/ProtectedRoute';
-import { useUserStore } from '@/stores/userStore';
+import { useUserStore } from '@/stores/user/userStore';
 import AdminPageHeader from '@/app/components/admin/AdminPageHeader';
 import AdminCard from '@/app/components/admin/AdminCard';
 import AdminCardHeader from '@/app/components/admin/AdminCardHeader';

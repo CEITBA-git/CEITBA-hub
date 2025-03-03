@@ -1,10 +1,11 @@
 "use client";
 
 import React from 'react';
-import { useUserStore, Role } from '@/stores/userStore';
+import { AllowedRoles } from '@/stores/user/modules';
+import { useUserStore } from '@/stores/user/userStore';
 
 interface RoleBasedAccessProps {
-  allowedRoles: Role[];
+  allowedRoles: AllowedRoles[];
   children: React.ReactNode;
   fallback?: React.ReactNode;
 }
@@ -14,9 +15,8 @@ export const RoleBasedAccess: React.FC<RoleBasedAccessProps> = ({
   children,
   fallback = null,
 }) => {
-  const hasAnyRole = useUserStore(state => state.hasAnyRole);
-  
-  if (hasAnyRole(allowedRoles)) {
+  const { user, hasAnyRole } = useUserStore();
+  if (user && hasAnyRole(allowedRoles)) {
     return <>{children}</>;
   }
   

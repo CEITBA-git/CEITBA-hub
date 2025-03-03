@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { useUserStore } from '@/stores/userStore';
+import { useUserStore } from '@/stores/user/userStore';
 
 // Add this to your existing MainLayout component
 // This assumes you have a navigation component in your main layout

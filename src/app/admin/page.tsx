@@ -1,8 +1,7 @@
-"use client";
-
-import React from 'react';
+"use client"
+import React, { useEffect, useState } from 'react';
 import AdminLayout from '@/app/components/layout/AdminLayout';
-import { useUserStore } from '@/stores/userStore';
+import { useUserStore } from '@/stores/user/userStore';
 import { ProtectedRoute } from '@/app/components/auth/ProtectedRoute';
 import Link from 'next/link';
 import AdminCard from '@/app/components/admin/AdminCard';
@@ -10,12 +9,85 @@ import AdminCardHeader from '@/app/components/admin/AdminCardHeader';
 import AdminCardContent from '@/app/components/admin/AdminCardContent';
 import AdminPageHeader from '@/app/components/admin/AdminPageHeader';
 import AdminButton from '@/app/components/admin/AdminButton';
+import { supabase } from '@/lib/supabase';
+import { AllowedRoles } from '@/stores/user/modules';
+import { useRouter } from 'next/navigation';
 
 export default function AdminDashboard() {
   const user = useUserStore((state: any) => state.user);
-  
+  const [isLoading, setIsLoading] = useState(true);
+  const [userData, setUserData] = useState<any>(null);
+  const router = useRouter();
+
+  useEffect(() => {
+    // Check for auth error in URL and handle it
+    if (typeof window !== 'undefined') {
+      const url = window.location.href;
+      if (url.includes('auth-code-error')) {
+        // Clear the URL and redirect to login
+        router.push('/login');
+        return;
+      }
+    }
+
+    // Handle authentication state
+    const checkAuth = async () => {
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        
+        if (!session) {
+          // No session, redirect to login
+          router.push('/login');
+          return;
+        }
+        
+        // If we have a user in the store, use it
+        if (user) {
+          setUserData(user);
+          setIsLoading(false);
+        } else {
+          // Wait a bit longer for user store to populate
+          const timer = setTimeout(() => {
+            if (user) {
+              setUserData(user);
+            }
+            setIsLoading(false);
+          }, 1500);
+          
+          return () => clearTimeout(timer);
+        }
+      } catch (error) {
+        console.error("Auth check error:", error);
+        setIsLoading(false);
+      }
+    };
+    
+    checkAuth();
+  }, [user, router]);
+
+  // Don't render anything until we've checked authentication
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
+      </div>
+    );
+  }
+
+  // Only render the protected content if we have user data
+  if (!userData) {
+    return (
+      <div className="flex items-center justify-center min-h-screen flex-col">
+        <div className="text-xl font-semibold mb-4">Sesión no iniciada</div>
+        <Link href="/auth/login">
+          <AdminButton variant="primary">Iniciar Sesión</AdminButton>
+        </Link>
+      </div>
+    );
+  }
+
   return (
-    <ProtectedRoute allowedRoles={['admin', 'sports', 'organization']}>
+    <ProtectedRoute allowedRoles={[AllowedRoles.IT, AllowedRoles.MEDIA, AllowedRoles.INFRA, AllowedRoles.DEPORTES, AllowedRoles.NAUTICA, AllowedRoles.EVENTOS]}>
       <AdminLayout>
         <AdminPageHeader 
           title="Panel de Administración" 
@@ -25,8 +97,8 @@ export default function AdminDashboard() {
         <div className="mt-6">
           <AdminCard>
             <AdminCardHeader 
-              title={`Bienvenido, ${user?.name}`} 
-              description={`Has iniciado sesión como: ${user?.roles.join(', ')}`}
+              title={`Bienvenido, ${userData?.name || 'Usuario'}`} 
+              description={`Has iniciado sesión como: ${userData?.roles?.join(', ') || 'Cargando roles...'}`}
             />
             <div className="border-t border-gray-200">
               <dl>
@@ -35,7 +107,7 @@ export default function AdminDashboard() {
                     Email
                   </dt>
                   <dd className="text-sm text-gray-900 col-span-2">
-                    {user?.email}
+                    {userData?.email || 'Cargando...'}
                   </dd>
                 </div>
                 <div className="bg-white px-6 py-5 grid grid-cols-3 gap-4">
@@ -43,7 +115,7 @@ export default function AdminDashboard() {
                     ID de Usuario
                   </dt>
                   <dd className="text-sm text-gray-900 col-span-2">
-                    {user?.id}
+                    {userData?.id || 'Cargando...'}
                   </dd>
                 </div>
               </dl>
