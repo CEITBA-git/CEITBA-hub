@@ -14,13 +14,13 @@ const AdminSearchFilter: React.FC<AdminSearchFilterProps> = ({
   className = '',
 }) => {
   return (
-    <div className={`relative ${className}`}>
+    <div className={`relative ${className} border-2 border-gray rounded-md bg-background focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-50`}>
       <input
         type="text"
         placeholder={placeholder}
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="rounded-md border-gray/20 shadow-sm focus:border-primary focus:ring focus:ring-primary/20 focus:ring-opacity-50 pl-8 pr-3 w-full h-10 bg-background"
+        className="rounded-md pl-8 pr-3 w-full h-10 bg-background"
       />
       <div className="absolute inset-y-0 left-0 pl-2 flex items-center pointer-events-none">
         <svg className="h-5 w-5 text-gray" fill="none" viewBox="0 0 24 24" stroke="currentColor">

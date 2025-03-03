@@ -64,7 +64,7 @@ export default function AdminDashboard() {
                   <h3 className="text-lg font-medium text-gray-900">Gestión de Usuarios</h3>
                   <div className="mt-2">
                     <Link href="/admin/users">
-                      <AdminButton variant="secondary" size="sm">
+                      <AdminButton variant="primary" size="sm">
                         Ver Usuarios
                       </AdminButton>
                     </Link>
@@ -86,7 +86,7 @@ export default function AdminDashboard() {
                   <h3 className="text-lg font-medium text-gray-900">Deportes</h3>
                   <div className="mt-2">
                     <Link href="/admin/sports">
-                      <AdminButton variant="secondary" size="sm">
+                      <AdminButton variant="primary" size="sm">
                         Gestionar Deportes
                       </AdminButton>
                     </Link>
@@ -108,7 +108,7 @@ export default function AdminDashboard() {
                   <h3 className="text-lg font-medium text-gray-900">Beneficios</h3>
                   <div className="mt-2">
                     <Link href="/admin/benefits">
-                      <AdminButton variant="secondary" size="sm">
+                      <AdminButton variant="primary" size="sm">
                         Gestionar Beneficios
                       </AdminButton>
                     </Link>

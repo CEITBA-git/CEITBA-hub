@@ -12,7 +12,7 @@ const AdminCardContent: React.FC<AdminCardContentProps> = ({
   divider = false
 }) => {
   return (
-    <div className={`px-6 py-5 ${divider ? 'border-t border-gray/5' : ''} ${className}`}>
+    <div className={`px-6 py-5 ${divider ? 'border-y border-1 border-gray bg-background' : ''} ${className}`}>
       {children}
     </div>
   );
