@@ -12,13 +12,13 @@ const AdminCard: React.FC<AdminCardProps> = ({
   variant = 'default'
 }) => {
   const variantClasses = {
-    default: 'bg-surface shadow-sm',
-    elevated: 'bg-surface shadow-md',
+    default: 'bg-surface border border-surface',
+    elevated: 'bg-surface border border-surface',
     outlined: 'bg-background border border-gray/10'
   };
 
   return (
-    <div className={`rounded-md overflow-hidden ${variantClasses[variant]} ${className}`}>
+    <div className={`rounded-md border-2 border-secondary overflow-hidden ${variantClasses[variant]} ${className}`}>
       {children}
     </div>
   );
