@@ -1,12 +1,12 @@
 "use client";
 
-import React, { ReactNode, useState } from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useUserStore } from '@/stores/userStore';
 
 interface AdminLayoutProps {
-  children: ReactNode;
+  children: React.ReactNode;
 }
 
 const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
@@ -24,11 +24,11 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
   ];
   
   return (
-    <div className="h-screen flex overflow-hidden bg-background">
+    <div className="h-screen flex overflow-hidden bg-gray-50">
       {/* Mobile sidebar */}
       <div className={`md:hidden fixed inset-0 flex z-40 ${sidebarOpen ? 'block' : 'hidden'}`}>
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-75" onClick={() => setSidebarOpen(false)}></div>
-        <div className="relative flex-1 flex flex-col max-w-xs w-full bg-surface">
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-75 backdrop-blur-sm" onClick={() => setSidebarOpen(false)}></div>
+        <div className="relative flex-1 flex flex-col max-w-xs w-full bg-white">
           <div className="absolute top-0 right-0 -mr-12 pt-2">
             <button
               className="ml-1 flex items-center justify-center h-10 w-10 rounded-full focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
@@ -41,8 +41,8 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
             </button>
           </div>
           <div className="flex-1 h-0 pt-5 pb-4 overflow-y-auto">
-            <div className="flex-shrink-0 flex items-center px-4">
-              <span className="text-xl font-bold text-primary">CEITBA Admin</span>
+            <div className="flex-shrink-0 flex items-center px-4 py-4">
+              <span className="text-xl font-bold text-gray-900">CEITBA <span className="font-normal text-gray-500">|</span> Admin</span>
             </div>
             <nav className="mt-5 px-2 space-y-1">
               {navigation.map((item) => (
@@ -51,14 +51,14 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
                   href={item.href}
                   className={`${
                     pathname === item.href
-                      ? 'bg-primary/10 text-primary'
-                      : 'text-gray hover:bg-surface/80'
-                  } group flex items-center px-2 py-2 text-base font-medium rounded-md`}
+                      ? 'bg-gray-100 text-primary'
+                      : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                  } group flex items-center px-2 py-2 text-base font-medium rounded-md transition-all duration-200`}
                 >
                   <svg
                     className={`${
-                      pathname === item.href ? 'text-primary' : 'text-gray'
-                    } mr-4 flex-shrink-0 h-6 w-6`}
+                      pathname === item.href ? 'text-primary' : 'text-gray-400 group-hover:text-gray-500'
+                    } mr-4 flex-shrink-0 h-6 w-6 transition-colors duration-200`}
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
                     viewBox="0 0 24 24"
@@ -72,31 +72,16 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
               ))}
             </nav>
           </div>
-          <div className="flex-shrink-0 flex p-4 bg-surface/50">
-            <div className="flex-shrink-0 group block">
-              <div className="flex items-center">
-                <div>
-                  <div className="h-10 w-10 rounded-full bg-gray/20 flex items-center justify-center text-gray">
-                    {user?.name?.charAt(0) || 'U'}
-                  </div>
-                </div>
-                <div className="ml-3">
-                  <p className="text-base font-medium text-textDefault">{user?.name || 'Usuario'}</p>
-                  <p className="text-sm font-medium text-gray">{user?.roles?.join(', ') || 'Sin rol'}</p>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
 
       {/* Static sidebar for desktop */}
       <div className="hidden md:flex md:flex-shrink-0">
         <div className="flex flex-col w-64">
-          <div className="flex flex-col h-0 flex-1 bg-surface">
+          <div className="flex flex-col h-0 flex-1 bg-gray-50">
             <div className="flex-1 flex flex-col pt-5 pb-4 overflow-y-auto">
-              <div className="flex items-center flex-shrink-0 px-4">
-                <span className="text-xl font-bold text-primary">CEITBA Admin</span>
+              <div className="flex items-center flex-shrink-0 px-4 py-4">
+                <span className="text-xl font-bold text-gray-900">CEITBA <span className="font-normal text-gray-500">|</span> Admin</span>
               </div>
               <nav className="mt-5 flex-1 px-2 space-y-1">
                 {navigation.map((item) => (
@@ -105,14 +90,14 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
                     href={item.href}
                     className={`${
                       pathname === item.href
-                        ? 'bg-primary/10 text-primary'
-                        : 'text-gray hover:bg-surface/80'
-                    } group flex items-center px-2 py-2 text-sm font-medium rounded-md`}
+                        ? 'bg-white text-primary'
+                        : 'text-gray-600 hover:bg-white hover:text-gray-900'
+                    } group flex items-center px-2 py-2 text-sm font-medium rounded-md transition-all duration-200`}
                   >
                     <svg
                       className={`${
-                        pathname === item.href ? 'text-primary' : 'text-gray'
-                      } mr-3 flex-shrink-0 h-6 w-6`}
+                        pathname === item.href ? 'text-primary' : 'text-gray-400 group-hover:text-gray-500'
+                      } mr-3 flex-shrink-0 h-6 w-6 transition-colors duration-200`}
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
                       viewBox="0 0 24 24"
@@ -126,30 +111,15 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
                 ))}
               </nav>
             </div>
-            <div className="flex-shrink-0 flex p-4 bg-surface/50">
-              <div className="flex-shrink-0 w-full group block">
-                <div className="flex items-center">
-                  <div>
-                    <div className="h-10 w-10 rounded-full bg-gray/20 flex items-center justify-center text-gray">
-                      {user?.name?.charAt(0) || 'U'}
-                    </div>
-                  </div>
-                  <div className="ml-3">
-                    <p className="text-sm font-medium text-textDefault">{user?.name || 'Usuario'}</p>
-                    <p className="text-xs font-medium text-gray">{user?.roles?.join(', ') || 'Sin rol'}</p>
-                  </div>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </div>
 
       <div className="flex flex-col w-0 flex-1 overflow-hidden">
         {/* Topbar */}
-        <div className="relative z-10 flex-shrink-0 flex h-16 bg-primary shadow">
+        <div className="relative z-10 flex-shrink-0 flex h-16 bg-white">
           <button
-            className="px-4 text-white md:hidden"
+            className="px-4 text-gray-500 md:hidden"
             onClick={() => setSidebarOpen(true)}
           >
             <span className="sr-only">Abrir menú</span>
@@ -159,20 +129,29 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
           </button>
           <div className="flex-1 px-4 flex justify-between">
             <div className="flex-1 flex items-center">
-              <h1 className="text-white text-xl font-semibold">Panel de Administración</h1>
+              <h1 className="text-gray-800 text-xl font-semibold hidden md:block">Panel de Administración</h1>
             </div>
             <div className="ml-4 flex items-center md:ml-6">
-              <Link href="/" className="text-white hover:text-white/80 px-3 py-2 rounded-md text-sm font-medium">
-                Volver al Sitio
-              </Link>
-              <Link href="/api/auth/signout" className="text-white hover:text-white/80 px-3 py-2 rounded-md text-sm font-medium">
-                Cerrar Sesión
-              </Link>
+              <div className="flex items-center">
+                <div className="flex items-center">
+                  <span className="text-sm font-medium text-gray-700 mr-2">{user?.name || 'Usuario'}</span>
+                  <Link 
+                    href="/api/auth/signout" 
+                    className="p-1 rounded-full text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+                    title="Cerrar sesión"
+                  >
+                    <span className="sr-only">Cerrar sesión</span>
+                    <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                    </svg>
+                  </Link>
+                </div>
+              </div>
             </div>
           </div>
         </div>
 
-        <main className="flex-1 relative overflow-y-auto focus:outline-none p-6">
+        <main className="flex-1 relative overflow-y-auto focus:outline-none p-6 bg-gray-50">
           {children}
         </main>
       </div>

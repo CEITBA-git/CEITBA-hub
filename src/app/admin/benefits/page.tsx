@@ -311,7 +311,7 @@ export default function BenefitsManagement() {
                       </p>
                     </div>
                   ) : (
-                    <div className="divide-y divide-gray/10">
+                    <div className="bg-background">
                       {filteredBenefits.map(benefit => (
                         <div 
                           key={benefit.id}
