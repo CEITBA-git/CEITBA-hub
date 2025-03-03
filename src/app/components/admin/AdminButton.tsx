@@ -1,4 +1,5 @@
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useState } from 'react';
+import AdminConfirmDialog from './AdminConfirmDialog';
 
 interface AdminButtonProps {
   children: ReactNode;
@@ -9,6 +10,10 @@ interface AdminButtonProps {
   icon?: ReactNode;
   disabled?: boolean;
   className?: string;
+  confirmTitle?: string;
+  confirmMessage?: string;
+  confirmText?: string;
+  cancelText?: string;
 }
 
 const AdminButton: React.FC<AdminButtonProps> = ({
@@ -20,7 +25,13 @@ const AdminButton: React.FC<AdminButtonProps> = ({
   icon,
   disabled = false,
   className = '',
+  confirmTitle = '¿Estás seguro?',
+  confirmMessage = 'Esta acción no se puede deshacer.',
+  confirmText = 'Confirmar',
+  cancelText = 'Cancelar',
 }) => {
+  const [showConfirm, setShowConfirm] = useState(false);
+  
   const baseClasses = 'inline-flex items-center justify-center font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2';
   
   const variantClasses = {
@@ -38,16 +49,52 @@ const AdminButton: React.FC<AdminButtonProps> = ({
   
   const disabledClasses = disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer';
   
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    if (variant === 'danger' && onClick && !disabled) {
+      e.preventDefault();
+      setShowConfirm(true);
+    } else if (onClick && !disabled) {
+      onClick(e);
+    }
+  };
+  
+  const handleConfirm = () => {
+    setShowConfirm(false);
+    if (onClick) {
+      // Ejecutar directamente la función onClick sin crear un evento sintético
+      onClick({} as React.MouseEvent<HTMLButtonElement>);
+    }
+  };
+  
+  const handleCancel = () => {
+    setShowConfirm(false);
+  };
+  
   return (
-    <button
-      type={type}
-      onClick={onClick}
-      disabled={disabled}
-      className={`${baseClasses} ${variantClasses[variant]} ${sizeClasses[size]} ${disabledClasses} ${className}`}
-    >
-      {icon && <span className="mr-2">{icon}</span>}
-      {children}
-    </button>
+    <>
+      <button
+        type={type}
+        onClick={handleClick}
+        disabled={disabled}
+        className={`${baseClasses} ${variantClasses[variant]} ${sizeClasses[size]} ${disabledClasses} ${className}`}
+      >
+        {icon && <span className="mr-2">{icon}</span>}
+        {children}
+      </button>
+      
+      {variant === 'danger' && (
+        <AdminConfirmDialog
+          isOpen={showConfirm}
+          title={confirmTitle}
+          message={confirmMessage}
+          confirmText={confirmText}
+          cancelText={cancelText}
+          onConfirm={handleConfirm}
+          onCancel={handleCancel}
+          variant="danger"
+        />
+      )}
+    </>
   );
 };
 
