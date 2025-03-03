@@ -21,7 +21,7 @@ const AdminFormField: React.FC<AdminFormFieldProps> = ({
 }) => {
   return (
     <div className={className}>
-      <label htmlFor={id} className="block text-sm font-medium text-gray">
+      <label htmlFor={id} className="block text-sm font-medium text-textDefault">
         {label} {required && <span className="text-red-500">*</span>}
       </label>
       <div className="mt-1">

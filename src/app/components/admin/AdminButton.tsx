@@ -24,10 +24,10 @@ const AdminButton: React.FC<AdminButtonProps> = ({
   const baseClasses = 'inline-flex items-center justify-center font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2';
   
   const variantClasses = {
-    primary: 'text-white bg-primary hover:bg-primary/90 focus:ring-primary border border-transparent',
-    secondary: 'text-textDefault bg-surface hover:bg-surface/90 focus:ring-primary border border-gray/20',
-    danger: 'text-white bg-red-600 hover:bg-red-700 focus:ring-red-500 border border-transparent',
-    outline: 'text-primary bg-transparent hover:bg-primary/5 focus:ring-primary border border-primary',
+    primary: 'text-white bg-primary hover:bg-primary/90 focus:ring-primary',
+    secondary: 'text-textDefault bg-surface hover:bg-surface/90 focus:ring-primary',
+    danger: 'text-white bg-red-600 hover:bg-red-700 focus:ring-red-500',
+    outline: 'text-primary bg-transparent hover:bg-primary/5 focus:ring-primary border border-primary/30',
   };
   
   const sizeClasses = {

@@ -8,7 +8,7 @@ interface AdminCardHeaderProps {
 
 const AdminCardHeader: React.FC<AdminCardHeaderProps> = ({ title, description, action }) => {
   return (
-    <div className="px-6 py-5 flex justify-between items-center border-b border-gray/10">
+    <div className="px-6 py-5 flex justify-between items-center">
       <div>
         <h3 className="text-lg leading-6 font-medium text-textDefault">{title}</h3>
         {description && (

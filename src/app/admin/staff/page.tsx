@@ -12,6 +12,9 @@ import AdminTable from '@/app/components/admin/AdminTable';
 import AdminFormField from '@/app/components/admin/AdminFormField';
 import AdminPageHeader from '@/app/components/admin/AdminPageHeader';
 import AdminSearchFilter from '@/app/components/admin/AdminSearchFilter';
+import AdminInput from '@/app/components/admin/AdminInput';
+import AdminSelect from '@/app/components/admin/AdminSelect';
+import AdminDateInput from '@/app/components/admin/AdminDateInput';
 
 // Mock data for staff members
 const initialStaffMembers = [
@@ -58,6 +61,17 @@ const departmentOptions = [
   'Organizacion'
 ];
 
+// Roles by department
+const rolesByDepartment = {
+  'Directivos': ['Presidente', 'Vicepresidente', 'Tesorero', 'Secretaria'],
+  'Deportes': ['Miembro', 'Lider'],
+  'IT': ['Miembro', 'Lider'],
+  'Media': ['Miembro', 'Lider'],
+  'Infra': ['Miembro', 'Lider'],
+  'Eventos': ['Miembro', 'Lider'],
+  'Organizacion': ['Miembro', 'Lider']
+};
+
 export default function StaffManagement() {
   const user = useUserStore((state: any) => state.user);
   const [staffMembers, setStaffMembers] = useState(initialStaffMembers);
@@ -65,50 +79,53 @@ export default function StaffManagement() {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [newStaff, setNewStaff] = useState({
-    userId: '',
     name: '',
     email: '',
-    department: 'Deportes',
     role: 'Miembro',
+    department: 'Deportes',
+    status: 'Activo',
     date_start: '',
     date_end: ''
   });
   
   // Get role options based on department
   const getRoleOptions = (department: string) => {
-    if (department === 'Directivos') {
-      return ['Presidente', 'Vicepresidente', 'Tesorero', 'Secretaria'];
-    } else {
-      return ['Miembro', 'Lider'];
-    }
+    return rolesByDepartment[department as keyof typeof rolesByDepartment] || ['Miembro'];
   };
   
   // Handle department change to update role options
   const handleDepartmentChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const department = e.target.value;
-    const roleOptions = getRoleOptions(department);
+    const roles = getRoleOptions(department);
     
     setNewStaff({
       ...newStaff,
       department,
-      // Set default role based on department
-      role: roleOptions[0]
+      role: roles[0]
     });
   };
   
   const handleAddStaff = () => {
-    // Generate a mock userId if not provided
-    const userId = newStaff.userId || Date.now().toString().slice(-3);
+    // Validar fechas
+    const isStartDateValid = validateDate(newStaff.date_start);
+    const isEndDateValid = newStaff.date_end ? validateDate(newStaff.date_end) : true;
+    
+    if (!isStartDateValid || !isEndDateValid) {
+      // Mostrar error o impedir envío
+      return;
+    }
+    
+    // Generar un ID único si no se proporciona uno
+    const staffId = Date.now().toString();
     
     setStaffMembers([
       ...staffMembers,
       {
-        id: Date.now().toString(),
         ...newStaff,
-        userId,
-        date_end: newStaff.date_end || null
+        id: staffId
       }
     ]);
+    
     resetForm();
   };
   
@@ -129,11 +146,11 @@ export default function StaffManagement() {
   
   const handleEditStaff = (staff: any) => {
     setNewStaff({
-      userId: staff.userId,
       name: staff.name,
       email: staff.email,
-      department: staff.department,
       role: staff.role,
+      department: staff.department,
+      status: staff.status,
       date_start: staff.date_start,
       date_end: staff.date_end || ''
     });
@@ -143,16 +160,34 @@ export default function StaffManagement() {
   
   const resetForm = () => {
     setNewStaff({
-      userId: '',
       name: '',
       email: '',
-      department: 'Deportes',
       role: 'Miembro',
+      department: 'Deportes',
+      status: 'Activo',
       date_start: '',
       date_end: ''
     });
     setEditingId(null);
     setIsAddingStaff(false);
+  };
+
+  // Función auxiliar para validar fechas
+  const validateDate = (dateStr: string): boolean => {
+    if (!dateStr) return false;
+    
+    const regex = /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/;
+    if (!regex.test(dateStr)) return false;
+    
+    const parts = dateStr.split('/');
+    const day = parseInt(parts[0], 10);
+    const month = parseInt(parts[1], 10) - 1;
+    const year = parseInt(parts[2], 10);
+    
+    const date = new Date(year, month, day);
+    return date.getDate() === day && 
+           date.getMonth() === month && 
+           date.getFullYear() === year;
   };
 
   // Filter staff members based on search query
@@ -196,14 +231,47 @@ export default function StaffManagement() {
       )
     },
     {
-      header: 'Período',
+      header: 'Fecha de Inicio',
       accessor: 'date_start',
-      cell: (staff: any) => (
-        <div>
-          <div className="text-sm text-gray-900">{staff.date_start}</div>
-          <div className="text-sm text-gray-500">{staff.date_end || 'Actual'}</div>
-        </div>
-      )
+      cell: (staff: any) => {
+        // Asegurarse de que la fecha se muestre en formato dd/mm/yyyy
+        let displayDate = staff.date_start;
+        
+        // Si la fecha está en formato ISO o YYYY-MM-DD, convertirla
+        if (staff.date_start && staff.date_start.includes('-')) {
+          const date = new Date(staff.date_start);
+          const day = String(date.getDate()).padStart(2, '0');
+          const month = String(date.getMonth() + 1).padStart(2, '0');
+          const year = date.getFullYear();
+          displayDate = `${day}/${month}/${year}`;
+        }
+        
+        return <div className="text-sm text-gray-900">{displayDate}</div>;
+      }
+    },
+    {
+      header: 'Fecha de Fin',
+      accessor: 'date_end',
+      cell: (staff: any) => {
+        // Mostrar "Actual" si no hay fecha de fin
+        if (!staff.date_end) {
+          return <div className="text-sm text-gray-900">Actual</div>;
+        }
+        
+        // Asegurarse de que la fecha se muestre en formato dd/mm/yyyy
+        let displayDate = staff.date_end;
+        
+        // Si la fecha está en formato ISO o YYYY-MM-DD, convertirla
+        if (staff.date_end && staff.date_end.includes('-')) {
+          const date = new Date(staff.date_end);
+          const day = String(date.getDate()).padStart(2, '0');
+          const month = String(date.getMonth() + 1).padStart(2, '0');
+          const year = date.getFullYear();
+          displayDate = `${day}/${month}/${year}`;
+        }
+        
+        return <div className="text-sm text-gray-900">{displayDate}</div>;
+      }
     },
     {
       header: 'Estado',
@@ -269,32 +337,16 @@ export default function StaffManagement() {
             <AdminCardContent>
               <div className="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
                 <AdminFormField
-                  label="ID de Usuario"
-                  id="userId"
-                  className="sm:col-span-3"
-                >
-                  <input
-                    type="text"
-                    id="userId"
-                    value={newStaff.userId}
-                    onChange={(e) => setNewStaff({...newStaff, userId: e.target.value})}
-                    className="shadow-sm focus:ring-primary focus:border-primary block w-full sm:text-sm border-gray-300 rounded-xl"
-                    placeholder="Opcional - se generará automáticamente"
-                  />
-                </AdminFormField>
-
-                <AdminFormField
                   label="Nombre"
                   id="name"
                   required
                   className="sm:col-span-3"
                 >
-                  <input
+                  <AdminInput
                     type="text"
                     id="name"
                     value={newStaff.name}
                     onChange={(e) => setNewStaff({...newStaff, name: e.target.value})}
-                    className="shadow-sm focus:ring-primary focus:border-primary block w-full sm:text-sm border-gray-300 rounded-xl"
                     required
                   />
                 </AdminFormField>
@@ -303,14 +355,13 @@ export default function StaffManagement() {
                   label="Email"
                   id="email"
                   required
-                  className="sm:col-span-6"
+                  className="sm:col-span-3"
                 >
-                  <input
+                  <AdminInput
                     type="email"
                     id="email"
                     value={newStaff.email}
                     onChange={(e) => setNewStaff({...newStaff, email: e.target.value})}
-                    className="shadow-sm focus:ring-primary focus:border-primary block w-full sm:text-sm border-gray-300 rounded-xl"
                     required
                   />
                 </AdminFormField>
@@ -321,16 +372,12 @@ export default function StaffManagement() {
                   required
                   className="sm:col-span-3"
                 >
-                  <select
+                  <AdminSelect
                     id="department"
                     value={newStaff.department}
                     onChange={handleDepartmentChange}
-                    className="shadow-sm focus:ring-primary focus:border-primary block w-full sm:text-sm border-gray-300 rounded-xl"
-                  >
-                    {departmentOptions.map(dept => (
-                      <option key={dept} value={dept}>{dept}</option>
-                    ))}
-                  </select>
+                    options={departmentOptions}
+                  />
                 </AdminFormField>
 
                 <AdminFormField
@@ -339,16 +386,12 @@ export default function StaffManagement() {
                   required
                   className="sm:col-span-3"
                 >
-                  <select
+                  <AdminSelect
                     id="role"
                     value={newStaff.role}
                     onChange={(e) => setNewStaff({...newStaff, role: e.target.value})}
-                    className="shadow-sm focus:ring-primary focus:border-primary block w-full sm:text-sm border-gray-300 rounded-xl"
-                  >
-                    {getRoleOptions(newStaff.department).map(role => (
-                      <option key={role} value={role}>{role}</option>
-                    ))}
-                  </select>
+                    options={getRoleOptions(newStaff.department)}
+                  />
                 </AdminFormField>
 
                 <AdminFormField
@@ -357,12 +400,10 @@ export default function StaffManagement() {
                   required
                   className="sm:col-span-3"
                 >
-                  <input
-                    type="date"
+                  <AdminDateInput
                     id="date_start"
                     value={newStaff.date_start}
-                    onChange={(e) => setNewStaff({...newStaff, date_start: e.target.value})}
-                    className="shadow-sm focus:ring-primary focus:border-primary block w-full sm:text-sm border-gray-300 rounded-xl"
+                    onChange={(value) => setNewStaff({...newStaff, date_start: value})}
                     required
                   />
                 </AdminFormField>
@@ -372,12 +413,10 @@ export default function StaffManagement() {
                   id="date_end"
                   className="sm:col-span-3"
                 >
-                  <input
-                    type="date"
+                  <AdminDateInput
                     id="date_end"
                     value={newStaff.date_end}
-                    onChange={(e) => setNewStaff({...newStaff, date_end: e.target.value})}
-                    className="shadow-sm focus:ring-primary focus:border-primary block w-full sm:text-sm border-gray-300 rounded-xl"
+                    onChange={(value) => setNewStaff({...newStaff, date_end: value})}
                   />
                 </AdminFormField>
               </div>

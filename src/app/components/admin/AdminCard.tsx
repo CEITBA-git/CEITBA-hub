@@ -12,9 +12,9 @@ const AdminCard: React.FC<AdminCardProps> = ({
   variant = 'default'
 }) => {
   const variantClasses = {
-    default: 'bg-surface border border-gray/10 shadow-sm',
-    elevated: 'bg-surface border border-gray/10 shadow-md',
-    outlined: 'bg-background border border-gray/20'
+    default: 'bg-surface shadow-sm',
+    elevated: 'bg-surface shadow-md',
+    outlined: 'bg-background border border-gray/10'
   };
 
   return (

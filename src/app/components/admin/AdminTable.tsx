@@ -23,8 +23,8 @@ const AdminTable: React.FC<AdminTableProps> = ({
 }) => {
   return (
     <div className="overflow-x-auto">
-      <table className="min-w-full divide-y divide-gray/10">
-        <thead className="bg-surface/80">
+      <table className="min-w-full">
+        <thead className="bg-surface/50">
           <tr>
             {columns.map((column, index) => (
               <th 
@@ -37,7 +37,7 @@ const AdminTable: React.FC<AdminTableProps> = ({
             ))}
           </tr>
         </thead>
-        <tbody className="bg-background divide-y divide-gray/10">
+        <tbody className="bg-background divide-y divide-gray/5">
           {data.length > 0 ? (
             data.map((item, rowIndex) => (
               <tr 
@@ -45,7 +45,7 @@ const AdminTable: React.FC<AdminTableProps> = ({
                 onClick={() => onRowClick && onRowClick(item)}
                 className={`
                   ${onRowClick ? 'cursor-pointer' : ''} 
-                  hover:bg-surface/50 transition-colors duration-150
+                  hover:bg-surface/30 transition-colors duration-150
                   ${selectedId === item[idField] ? 'bg-primary/5' : ''}
                 `}
               >

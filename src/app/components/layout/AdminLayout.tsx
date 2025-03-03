@@ -72,7 +72,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
               ))}
             </nav>
           </div>
-          <div className="flex-shrink-0 flex border-t border-gray/10 p-4">
+          <div className="flex-shrink-0 flex p-4 bg-surface/50">
             <div className="flex-shrink-0 group block">
               <div className="flex items-center">
                 <div>
@@ -93,7 +93,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
       {/* Static sidebar for desktop */}
       <div className="hidden md:flex md:flex-shrink-0">
         <div className="flex flex-col w-64">
-          <div className="flex flex-col h-0 flex-1 bg-surface border-r border-gray/10">
+          <div className="flex flex-col h-0 flex-1 bg-surface">
             <div className="flex-1 flex flex-col pt-5 pb-4 overflow-y-auto">
               <div className="flex items-center flex-shrink-0 px-4">
                 <span className="text-xl font-bold text-primary">CEITBA Admin</span>
@@ -126,7 +126,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
                 ))}
               </nav>
             </div>
-            <div className="flex-shrink-0 flex border-t border-gray/10 p-4">
+            <div className="flex-shrink-0 flex p-4 bg-surface/50">
               <div className="flex-shrink-0 w-full group block">
                 <div className="flex items-center">
                   <div>
@@ -149,7 +149,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
         {/* Topbar */}
         <div className="relative z-10 flex-shrink-0 flex h-16 bg-primary shadow">
           <button
-            className="px-4 border-r border-white/10 text-white md:hidden"
+            className="px-4 text-white md:hidden"
             onClick={() => setSidebarOpen(true)}
           >
             <span className="sr-only">Abrir menú</span>
