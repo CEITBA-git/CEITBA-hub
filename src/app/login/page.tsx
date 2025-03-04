@@ -4,13 +4,16 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import { useUserStore } from '@/stores/user/userStore';
+import type { AuthError } from '@supabase/supabase-js';
+
+interface LoginError {
+  message: string;
+}
 
 export default function LoginPage() {
   const router = useRouter();
   const { setUser, clearUser, user, isAuthenticated } = useUserStore();
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -38,37 +41,14 @@ export default function LoginPage() {
             clearUser();
           }
         }
-      } catch (error: any) {
-        setError(error.message || 'Error checking authentication');
+      } catch (error) {
+        const loginError = error as LoginError;
+        setError(loginError.message || 'Error checking authentication');
       }
     };
     
     checkAuth();
   }, [router, setUser, clearUser, isAuthenticated, user]);
-
-  const handleEmailLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-    setError('');
-
-    try {
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
-      
-      if (error) {
-        throw error;
-      }
-
-      await setUser(data.user.email!);
-      router.push('/admin');
-    } catch (error: any) {
-      setError(error.message || 'Error al iniciar sesión');
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   const handleGoogleLogin = async () => {
     setIsLoading(true);
@@ -88,8 +68,9 @@ export default function LoginPage() {
       if (error) {
         throw error;
       }
-    } catch (error: any) {
-      setError(error.message || 'Error al iniciar sesión con Google');
+    } catch (error) {
+      const authError = error as AuthError;
+      setError(authError.message || 'Error al iniciar sesión con Google');
     } finally {
       setIsLoading(false);
     }
@@ -122,65 +103,17 @@ export default function LoginPage() {
           </div>
         )}
         
-        <form className="mt-8 space-y-6" onSubmit={handleEmailLogin}>
-          <div className="rounded-md shadow-sm -space-y-px">
-            <div>
-              <label htmlFor="email-address" className="sr-only">Email</label>
-              <input
-                id="email-address"
-                name="email"
-                type="email"
-                autoComplete="email"
-                required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray/20 placeholder-gray text-textDefault rounded-t-md focus:outline-none focus:ring-primary focus:border-primary focus:z-10 sm:text-sm"
-                placeholder="Email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                disabled={isLoading}
-              />
-            </div>
-            <div>
-              <label htmlFor="password" className="sr-only">Contraseña</label>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                autoComplete="current-password"
-                required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray/20 placeholder-gray text-textDefault rounded-b-md focus:outline-none focus:ring-primary focus:border-primary focus:z-10 sm:text-sm"
-                placeholder="Contraseña"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                disabled={isLoading}
-              />
-            </div>
-          </div>
-
-          <div>
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
-            >
-              {isLoading ? 'Iniciando sesión...' : 'Iniciar sesión'}
-            </button>
-          </div>
-          
-          <div className="relative">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-gray/20"></div>
-            </div>
-            <div className="relative flex justify-center text-sm">
-              <span className="px-2 bg-background text-gray">O continúa con</span>
-            </div>
-          </div>
-          
-          <div>
+        <div className="mt-8">
+          <div className="flex flex-col space-y-4">
+            <p className="text-center text-sm text-gray-600 mb-4">
+              Utiliza tu cuenta institucional de ITBA para acceder al sistema
+            </p>
+            
             <button
               type="button"
               onClick={handleGoogleLogin}
               disabled={isLoading}
-              className="group relative w-full flex justify-center py-2 px-4 border border-gray/20 text-sm font-medium rounded-md text-textDefault bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+              className="w-full flex justify-center py-2 px-4 border border-gray/20 rounded-md shadow-sm text-sm font-medium text-textDefault bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
             >
               <span className="flex items-center">
                 <svg className="h-5 w-5 mr-2" viewBox="0 0 24 24" width="24" height="24">
@@ -191,11 +124,17 @@ export default function LoginPage() {
                     <path fill="#EA4335" d="M -14.754 43.989 C -12.984 43.989 -11.404 44.599 -10.154 45.789 L -6.734 42.369 C -8.804 40.429 -11.514 39.239 -14.754 39.239 C -19.444 39.239 -23.494 41.939 -25.464 45.859 L -21.484 48.949 C -20.534 46.099 -17.884 43.989 -14.754 43.989 Z"/>
                   </g>
                 </svg>
-                Google
+                {isLoading ? 'Iniciando sesión...' : 'Iniciar sesión con Google'}
               </span>
             </button>
+            
+            <div className="mt-4 text-center">
+              <p className="text-xs text-gray-500">
+                Solo se permite el acceso con cuentas institucionales de ITBA (@itba.edu.ar)
+              </p>
+            </div>
           </div>
-        </form>
+        </div>
       </div>
     </div>
   );

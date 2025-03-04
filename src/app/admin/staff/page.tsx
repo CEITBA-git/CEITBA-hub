@@ -4,7 +4,6 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import AdminLayout from '@/app/components/layout/AdminLayout';
 import { ProtectedRoute } from '@/app/components/auth/ProtectedRoute';
-import { useUserStore } from '@/stores/user/userStore';
 import AdminCard from '@/app/components/admin/AdminCard';
 import AdminCardHeader from '@/app/components/admin/AdminCardHeader';
 import AdminCardContent from '@/app/components/admin/AdminCardContent';
@@ -16,68 +15,91 @@ import AdminSearchFilter from '@/app/components/admin/AdminSearchFilter';
 import AdminInput from '@/app/components/admin/AdminInput';
 import AdminSelect from '@/app/components/admin/AdminSelect';
 import AdminDateInput from '@/app/components/admin/AdminDateInput';
-import { AllowedRoles, Branch, StaffType } from '@/stores/user/modules';
+import { AllowedRoles, StaffType } from '@/stores/user/modules';
+
+// Define interfaces for type safety
+interface StaffMember {
+  id: string;
+  userId: string;
+  name: string;
+  email: string;
+  branch: string;
+  role: string;
+  start_date: string;
+  end_date: string | null;
+}
+
+interface StaffFormData {
+  email: string;
+  role: string;
+  branch: string;
+  start_date: string;
+  end_date: string;
+  userId: string;
+}
+
+interface ApiStatus {
+  loading: boolean;
+  error: string | null;
+  success: string | null;
+}
+
+interface SelectOption {
+  value: string;
+  label: string;
+}
 
 // Update the branch options to include a blank default option
-const branchOptions = [
+const branchOptions: SelectOption[] = [
   { value: '', label: 'Seleccione un departamento' },
   { value: 'IT', label: 'IT' },
   { value: 'MEDIA', label: 'MEDIA' },
   { value: 'INFRA', label: 'INFRA' },
   { value: 'DEPORTES', label: 'DEPORTES' },
   { value: 'NAUTICA', label: 'NAUTICA' },
-  { value: 'EVENTOS', label: 'EVENTOS' },
-  { value: 'DIRECTIVOS', label: 'DIRECTIVOS' }
+  { value: 'EVENTOS', label: 'EVENTOS' }
 ];
 
 // Roles by branch - updated to match API expectations
-const rolesBybranch = {
+const rolesBybranch: Record<string, string[]> = {
   'IT': [StaffType.LIDER, StaffType.MIEMBRO],
   'MEDIA': [StaffType.LIDER, StaffType.MIEMBRO],
   'INFRA': [StaffType.LIDER, StaffType.MIEMBRO],
   'DEPORTES': [StaffType.LIDER, StaffType.MIEMBRO],
   'NAUTICA': [StaffType.LIDER, StaffType.MIEMBRO],
   'EVENTOS': [StaffType.LIDER, StaffType.MIEMBRO],
-  'DIRECTIVOS': [StaffType.PRESIDENTE, StaffType.VICEPRESIDENTE, StaffType.TESORERIA, StaffType.SECRETARIA],
 };
 
 export default function StaffManagement() {
-  const user = useUserStore((state: any) => state.user);
-  const [staffMembers, setStaffMembers] = useState<any[]>([]);
+  // Remove unused user state
+  const [staffMembers, setStaffMembers] = useState<StaffMember[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isAddingStaff, setIsAddingStaff] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
-  const [newStaff, setNewStaff] = useState({
+  
+  // Initialize with blank values
+  const initialStaffForm: StaffFormData = {
     email: '',
     role: '',
     branch: '',
     start_date: '',
     end_date: '',
     userId: ''
-  });
+  };
+  
+  const [newStaff, setNewStaff] = useState<StaffFormData>(initialStaffForm);
   
   // Add a state for API operation status
-  const [apiStatus, setApiStatus] = useState<{
-    loading: boolean;
-    error: string | null;
-    success: string | null;
-  }>({
+  const [apiStatus, setApiStatus] = useState<ApiStatus>({
     loading: false,
     error: null,
     success: null
   });
   
   // Add state to track original staff data for comparison
-  const [originalStaff, setOriginalStaff] = useState({
-    email: '',
-    role: '',
-    branch: '',
-    start_date: '',
-    end_date: '',
-    userId: ''
-  });
+  const [originalStaff, setOriginalStaff] = useState<StaffFormData>(initialStaffForm);
   
   useEffect(() => {
     const fetchStaffMembers = async () => {
@@ -98,13 +120,13 @@ export default function StaffManagement() {
   }, []);
   
   // Get role options based on branch
-  const getRoleOptions = (branch: string) => {
+  const getRoleOptions = (branch: string): SelectOption[] => {
     if (!branch) {
       // Return a default empty option when no branch is selected
       return [{ value: '', label: 'Seleccione un rol' }];
     }
     
-    const roles = rolesBybranch[branch as keyof typeof rolesBybranch] || [];
+    const roles = rolesBybranch[branch] || [];
     
     // Map roles to option objects with value and label
     return [
@@ -130,15 +152,6 @@ export default function StaffManagement() {
       setApiStatus({
         ...apiStatus,
         error: "Todos los campos marcados con * son obligatorios"
-      });
-      return;
-    }
-    
-    // Check if branch is valid according to API
-    if (newStaff.branch === 'DIRECTIVOS') {
-      setApiStatus({
-        ...apiStatus,
-        error: "El departamento 'DIRECTIVOS' no es válido para la API. Por favor, seleccione otro departamento."
       });
       return;
     }
@@ -213,23 +226,18 @@ export default function StaffManagement() {
       });
       
       resetForm();
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Error adding staff:', err);
       
       // Extract more detailed error message if available
       let errorMessage = "Error al agregar personal. Verifique los datos e intente nuevamente.";
       
-      if (err.response?.data?.message) {
-        errorMessage = err.response.data.message;
-      } else if (err.response?.data?.error) {
-        errorMessage = err.response.data.error;
-      } else if (err.message) {
-        errorMessage = err.message;
-      }
-      
-      // Check for specific error cases
-      if (errorMessage.includes("400") || errorMessage.includes("Bad Request")) {
-        errorMessage = "Error en los datos enviados. Verifique que el departamento y rol sean válidos.";
+      if (axios.isAxiosError(err) && err.response?.data) {
+        if (typeof err.response.data.message === 'string') {
+          errorMessage = err.response.data.message;
+        } else if (typeof err.response.data.error === 'string') {
+          errorMessage = err.response.data.error;
+        }
       }
       
       setApiStatus({
@@ -332,23 +340,18 @@ export default function StaffManagement() {
       });
       
       resetForm();
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Error updating staff:', err);
       
       // Extract more detailed error message if available
       let errorMessage = "Error al actualizar personal. Verifique los datos e intente nuevamente.";
       
-      if (err.response?.data?.message) {
-        errorMessage = err.response.data.message;
-      } else if (err.response?.data?.error) {
-        errorMessage = err.response.data.error;
-      } else if (err.message) {
-        errorMessage = err.message;
-      }
-      
-      // Check for specific error cases
-      if (errorMessage.includes("400") || errorMessage.includes("Bad Request")) {
-        errorMessage = "Error en los datos enviados. Verifique que el departamento y rol sean válidos.";
+      if (axios.isAxiosError(err) && err.response?.data) {
+        if (typeof err.response.data.message === 'string') {
+          errorMessage = err.response.data.message;
+        } else if (typeof err.response.data.error === 'string') {
+          errorMessage = err.response.data.error;
+        }
       }
       
       setApiStatus({
@@ -359,11 +362,7 @@ export default function StaffManagement() {
     }
   };
   
-  const handleDeleteStaff = (id: string) => {
-    setStaffMembers(staffMembers.filter((staff: any) => staff.id !== id));
-  };
-  
-  const handleEditStaff = (staff: any) => {
+  const handleEditStaff = (staff: StaffMember) => {
     // Convert dates from YYYY-MM-DD to DD/MM/YYYY format for the form
     const formatDateForForm = (dateStr: string | null) => {
       if (!dateStr) return '';
@@ -380,7 +379,7 @@ export default function StaffManagement() {
       return dateStr;
     };
     
-    const formattedStaff = {
+    const formattedStaff: StaffFormData = {
       email: staff.email || '',
       role: staff.role || '',
       branch: staff.branch || '',
@@ -400,24 +399,8 @@ export default function StaffManagement() {
   };
   
   const resetForm = () => {
-    setNewStaff({
-      email: '',
-      role: '',
-      branch: '',
-      start_date: '',
-      end_date: '',
-      userId: ''
-    });
-    
-    setOriginalStaff({
-      email: '',
-      role: '',
-      branch: '',
-      start_date: '',
-      end_date: '',
-      userId: ''
-    });
-    
+    setNewStaff(initialStaffForm);
+    setOriginalStaff(initialStaffForm);
     setEditingId(null);
     setIsAddingStaff(false);
     
@@ -431,26 +414,36 @@ export default function StaffManagement() {
     }, 3000);
   };
 
-  // Función auxiliar para validar fechas
+  // Validate date format (DD/MM/YYYY)
   const validateDate = (dateStr: string): boolean => {
     if (!dateStr) return false;
     
-    const regex = /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/;
+    const regex = /^(\d{2})\/(\d{2})\/(\d{4})$/;
     if (!regex.test(dateStr)) return false;
     
-    const parts = dateStr.split('/');
-    const day = parseInt(parts[0], 10);
-    const month = parseInt(parts[1], 10) - 1;
-    const year = parseInt(parts[2], 10);
+    const [, day, month, year] = dateStr.match(regex) || [];
+    const dayNum = parseInt(day, 10);
+    const monthNum = parseInt(month, 10);
+    const yearNum = parseInt(year, 10);
     
-    const date = new Date(year, month, day);
-    return date.getDate() === day && 
-           date.getMonth() === month && 
-           date.getFullYear() === year;
+    if (monthNum < 1 || monthNum > 12) return false;
+    if (dayNum < 1 || dayNum > 31) return false;
+    
+    // Check days in month (simplified)
+    if (monthNum === 2) {
+      // February
+      const isLeapYear = (yearNum % 4 === 0 && yearNum % 100 !== 0) || (yearNum % 400 === 0);
+      if (dayNum > (isLeapYear ? 29 : 28)) return false;
+    } else if ([4, 6, 9, 11].includes(monthNum) && dayNum > 30) {
+      // April, June, September, November have 30 days
+      return false;
+    }
+    
+    return true;
   };
 
   // Filter staff members based on search query
-  const filteredStaff = staffMembers.filter((staff: any) => {
+  const filteredStaff = staffMembers.filter((staff: StaffMember) => {
     if (!searchQuery) return true;
     
     const query = searchQuery.toLowerCase();
@@ -467,7 +460,7 @@ export default function StaffManagement() {
     {
       header: 'Miembro',
       accessor: 'name',
-      cell: (staff: any) => (
+      cell: (staff: StaffMember) => (
         <div>
           <div className="text-sm font-medium text-gray-900">{staff.name}</div>
           <div className="text-sm text-gray-500">{staff.email}</div>
@@ -477,21 +470,21 @@ export default function StaffManagement() {
     {
       header: 'Departamento',
       accessor: 'branch',
-      cell: (staff: any) => (
+      cell: (staff: StaffMember) => (
         <div className="text-sm text-gray-900">{staff.branch}</div>
       )
     },
     {
       header: 'Rol',
       accessor: 'role',
-      cell: (staff: any) => (
+      cell: (staff: StaffMember) => (
         <div className="text-sm text-gray-900">{staff.role}</div>
       )
     },
     {
       header: 'Fecha de Inicio',
       accessor: 'start_date',
-      cell: (staff: any) => {
+      cell: (staff: StaffMember) => {
         // Asegurarse de que la fecha se muestre en formato dd/mm/yyyy
         let displayDate = staff.start_date;
         
@@ -510,7 +503,7 @@ export default function StaffManagement() {
     {
       header: 'Fecha de Fin',
       accessor: 'end_date',
-      cell: (staff: any) => {
+      cell: (staff: StaffMember) => {
         // Mostrar "Actual" si no hay fecha de fin
         if (!staff.end_date) {
           return <div className="text-sm text-gray-900">-/-/-</div>;
@@ -534,7 +527,7 @@ export default function StaffManagement() {
     {
       header: 'Estado',
       accessor: 'status',
-      cell: (staff: any) => (
+      cell: (staff: StaffMember) => (
         <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
           !staff.end_date ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
         }`}>
@@ -545,7 +538,7 @@ export default function StaffManagement() {
     {
       header: 'Acciones',
       accessor: 'actions',
-      cell: (staff: any) => (
+      cell: (staff: StaffMember) => (
         <div className="text-right">
           <AdminButton
             variant="secondary"
@@ -554,13 +547,6 @@ export default function StaffManagement() {
             className="mr-2"
           >
             Editar
-          </AdminButton>
-          <AdminButton
-            variant="danger"
-            size="sm"
-            onClick={() => handleDeleteStaff(staff.id)}
-          >
-            Eliminar
           </AdminButton>
         </div>
       )

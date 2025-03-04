@@ -1,10 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Layout from "../components/Layout";
 import BenefitCard from "../components/BenefitCard";
 import SectionTitle from "../components/SectionTitle";
 import { Agreement, Language, Benefit } from "@/types/benefits";
+import Layout from "../components/Layout";
 
 const categories = [
   { id: "all", name: "Todos", emoji: "✨" },

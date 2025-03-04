@@ -75,14 +75,15 @@ export default function Topbar({ activeTab, onTabChange }: TopbarProps) {
                 >
                   FAQ
                 </button>
-                <button
+                {/* TODO: Add benefits card when ready */}
+                {/* <button
                   onClick={() => handleTabChange('benefits')}
                   className={`text-sm lg:text-base transition-colors ${
                     activeTab === 'benefits' ? 'text-primary' : 'text-gray hover:text-textDefault'
                   }`}
                 >
                   Beneficios
-                </button>
+                </button> */}
               </nav>
               <ThemeSwitcher />
             </div>

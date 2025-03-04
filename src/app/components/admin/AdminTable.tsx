@@ -1,26 +1,33 @@
 import React, { ReactNode } from 'react';
 
-interface Column {
+// Define generic type for table data
+interface Column<T> {
   header: string;
   accessor: string;
-  cell?: (item: any) => ReactNode;
+  cell?: (item: T) => ReactNode;
 }
 
-interface AdminTableProps {
-  columns: Column[];
-  data: any[];
-  onRowClick?: (item: any) => void;
+interface AdminTableProps<T> {
+  columns: Column<T>[];
+  data: T[];
+  onRowClick?: (item: T) => void;
   selectedId?: string | null;
   idField?: string;
 }
 
-const AdminTable: React.FC<AdminTableProps> = ({
+// Use generic type parameter for better type safety
+function AdminTable<T = Record<string, unknown>>({
   columns,
   data,
   onRowClick,
   selectedId = null,
   idField = 'id'
-}) => {
+}: AdminTableProps<T>) {
+  // Create a type-safe way to access dynamic properties
+  const getItemValue = (item: T, key: string): unknown => {
+    return (item as Record<string, unknown>)[key];
+  };
+
   return (
     <div className="overflow-x-auto">
       <table className="min-w-full">
@@ -47,12 +54,12 @@ const AdminTable: React.FC<AdminTableProps> = ({
                 className={`
                   ${onRowClick ? 'cursor-pointer' : ''} 
                   hover:bg-surface/30 transition-colors duration-150
-                  ${selectedId === item[idField] ? 'bg-primary/5' : ''}
+                  ${selectedId === String(getItemValue(item, idField)) ? 'bg-primary/5' : ''}
                 `}
               >
                 {columns.map((column, colIndex) => (
                   <td key={colIndex} className="px-6 py-4 whitespace-nowrap">
-                    {column.cell ? column.cell(item) : item[column.accessor]}
+                    {column.cell ? column.cell(item) : String(getItemValue(item, column.accessor) || '')}
                   </td>
                 ))}
               </tr>
@@ -68,6 +75,6 @@ const AdminTable: React.FC<AdminTableProps> = ({
       </table>
     </div>
   );
-};
+}
 
 export default AdminTable; 

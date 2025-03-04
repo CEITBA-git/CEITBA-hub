@@ -12,9 +12,18 @@ import AdminTable from '@/app/components/admin/AdminTable';
 import AdminSearchFilter from '@/app/components/admin/AdminSearchFilter';
 import { AllowedRoles } from '@/stores/user/modules';
 
+// Define interfaces for type safety
+interface User {
+  id: string;
+  name: string;
+  email: string;
+  roles: string[];
+  status?: string;
+}
+
 export default function UsersAdminPage() {
   const [searchQuery, setSearchQuery] = useState('');
-  const [users, setUsers] = useState<any[]>([]);
+  const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   
@@ -37,7 +46,7 @@ export default function UsersAdminPage() {
   }, []);
 
   // Filtrar usuarios según la búsqueda
-  const filteredUsers = users.filter((user: any) => {
+  const filteredUsers = users.filter((user: User) => {
     if (!searchQuery) return true;
     
     const query = searchQuery.toLowerCase();
@@ -53,7 +62,7 @@ export default function UsersAdminPage() {
     {
       header: 'Nombre',
       accessor: 'name',
-      cell: (user: any) => {
+      cell: (user: User) => {
         const initials = user.name ? user.name.split(' ').map((n: string) => n[0]).join('').toUpperCase() : '';
         
         return (
@@ -73,14 +82,14 @@ export default function UsersAdminPage() {
     {
       header: 'Email',
       accessor: 'email',
-      cell: (user: any) => (
+      cell: (user: User) => (
         <div className="text-sm text-gray-900">{user.email}</div>
       )
     },
     {
       header: 'Roles',
       accessor: 'roles',
-      cell: (user: any) => (
+      cell: (user: User) => (
         <div>
           {user.roles && user.roles.map((role: string, index: number) => (
             <span 
@@ -96,7 +105,7 @@ export default function UsersAdminPage() {
     {
       header: 'Estado',
       accessor: 'status',
-      cell: (user: any) => (
+      cell: (user: User) => (
         <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
           {user.status || 'Activo'}
         </span>

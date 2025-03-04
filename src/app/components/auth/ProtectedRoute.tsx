@@ -32,7 +32,7 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
 
         // Check if user has IT role (admin access) or has any of the allowed roles
         const isIT = user?.role?.branch === AllowedRoles.IT;
-        const isDirectivo = user?.role?.branch === AllowedRoles.DIRECTIVO;
+        const isDirectivo = user?.role?.branch === AllowedRoles.DIRECTIVOS;
        
         // TODO: HECKEAR LO HIZO COPILOT!!!!!
         // IT and Directivos have access to everything

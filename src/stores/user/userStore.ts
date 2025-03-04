@@ -4,7 +4,7 @@ import { supabase } from '@/lib/supabase';
 import { AllowedRoles, User } from './modules';
 import { fetchUserDetails } from '@/app/api/api';
 
-interface UserState {
+export interface UserState {
   user: User | null;
   isAuthenticated: boolean;
   isLoading: boolean;
@@ -85,6 +85,7 @@ export const useUserStore = create<UserState>()(
             lastFetched: now,
             isLoading: false
           });
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
           console.error('Error setting user:', error);
           set({ 
@@ -102,8 +103,9 @@ export const useUserStore = create<UserState>()(
         try {
           await supabase.auth.signOut();
           set({ user: null, isAuthenticated: false, error: null, lastFetched: null });
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
-          set({ error: error.message });
+          set({ error: error});
         }
       },
       

@@ -152,12 +152,13 @@ export default function Home() {
             emoji="🎮"
           />
 
-          <QuickAccessCard
+          {/* TODO: Add benefits card when ready */}
+          {/* <QuickAccessCard
             title="Beneficios"
             description="Descubrí todos los beneficios exclusivos"
             href="/benefits"
             emoji="🎁"
-          />
+          /> */}
         </div>
       </section>
 
