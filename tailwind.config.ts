@@ -6,9 +6,7 @@ const config: Config = {
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
-  safelist: [
-    { pattern: /bg-subject_color_\d/, variants: ["hover", "focus"] },
-  ],
+  safelist: [{ pattern: /bg-subject_color_\d/, variants: ["hover", "focus"] }],
   theme: {
     extend: {
       colors: {
@@ -17,6 +15,7 @@ const config: Config = {
         secondaryBackground: "var(--secondary-background)",
         gray: "var(--gray)",
         primary: "var(--primary)",
+        "primary-80": "var(--primary-80)",
         secondary: "var(--secondary)",
         textDefault: "var(--text-default)",
         border: "var(--border)",
@@ -36,18 +35,18 @@ const config: Config = {
         error_red_border: "var(--error-red-border)",
       },
       animation: {
-        'fadeIn': 'fadeIn 0.5s ease-in-out',
+        fadeIn: "fadeIn 0.5s ease-in-out",
       },
       keyframes: {
         fadeIn: {
-          '0%': { opacity: '0', transform: 'translateY(10px)' },
-          '100%': { opacity: '1', transform: 'translateY(0)' },
+          "0%": { opacity: "0", transform: "translateY(10px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
         },
       },
     },
   },
   plugins: [],
-  darkMode: 'class',
+  darkMode: "class",
 };
 
 export default config;

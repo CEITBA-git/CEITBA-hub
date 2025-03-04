@@ -36,12 +36,13 @@ const config: NextConfig = {
               "style-src 'self' 'unsafe-inline'",
               "img-src 'self' data: https: http:",
               "font-src 'self' data:",
-              "connect-src 'self' https://accounts.google.com",
+              // "connect-src 'self' https://accounts.google.com",
               "frame-src 'self' https://accounts.google.com",
               "form-action 'self' https://accounts.google.com",
               "base-uri 'self'",
               "object-src 'none'",
-              "media-src 'self'"
+              "media-src 'self'",
+              "connect-src 'self' http://localhost:3000 https://accounts.google.com;",
             ].join('; '),
           },
           {
