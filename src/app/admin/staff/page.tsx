@@ -67,6 +67,16 @@ export default function StaffManagement() {
     success: null
   });
   
+  // Add state to track original staff data for comparison
+  const [originalStaff, setOriginalStaff] = useState({
+    email: '',
+    role: '',
+    branch: '',
+    start_date: '',
+    end_date: '',
+    userId: ''
+  });
+  
   useEffect(() => {
     const fetchStaffMembers = async () => {
       try {
@@ -197,7 +207,7 @@ export default function StaffManagement() {
       setApiStatus({
         loading: false,
         error: null,
-        success: "Personal agregado exitosamente"
+        success: "Staff agregado exitosamente"
       });
       
       resetForm();
@@ -238,9 +248,24 @@ export default function StaffManagement() {
       return;
     }
     
+    // Validate dates
+    const isStartDateValid = validateDate(newStaff.start_date);
+    const isEndDateValid = newStaff.end_date ? validateDate(newStaff.end_date) : true;
+    
+    if (!isStartDateValid || !isEndDateValid) {
+      setApiStatus({
+        ...apiStatus,
+        error: "Las fechas ingresadas no son válidas. Utilice el formato DD/MM/YYYY"
+      });
+      return;
+    }
+    
     // Format dates to YYYY-MM-DD for API
     const formatDateForApi = (dateStr: string) => {
       if (!dateStr) return null;
+      
+      // If already in YYYY-MM-DD format, return as is
+      if (dateStr.match(/^\d{4}-\d{2}-\d{2}$/)) return dateStr;
       
       const parts = dateStr.split('/');
       if (parts.length !== 3) return null;
@@ -255,7 +280,8 @@ export default function StaffManagement() {
         success: null
       });
       
-      // Prepare the payload according to the API documentation
+      // For updates, we need to send ALL required fields regardless of changes
+      // The API requires email, branch, role, and start date for all operations
       const payload = {
         email: newStaff.email,
         branch: newStaff.branch,
@@ -263,6 +289,24 @@ export default function StaffManagement() {
         start: formatDateForApi(newStaff.start_date),
         end: newStaff.end_date ? formatDateForApi(newStaff.end_date) : null
       };
+      
+      // Check if anything has actually changed
+      const hasChanges = 
+        newStaff.branch !== originalStaff.branch ||
+        newStaff.role !== originalStaff.role ||
+        newStaff.start_date !== originalStaff.start_date ||
+        newStaff.end_date !== originalStaff.end_date;
+      
+      if (!hasChanges) {
+        setApiStatus({
+          loading: false,
+          error: null,
+          success: "No se detectaron cambios para actualizar"
+        });
+        
+        setTimeout(() => resetForm(), 2000);
+        return;
+      }
       
       console.log('Sending update payload:', payload);
       
@@ -282,7 +326,7 @@ export default function StaffManagement() {
       setApiStatus({
         loading: false,
         error: null,
-        success: "Personal actualizado exitosamente"
+        success: "Staff actualizado exitosamente"
       });
       
       resetForm();
@@ -290,9 +334,20 @@ export default function StaffManagement() {
       console.error('Error updating staff:', err);
       
       // Extract more detailed error message if available
-      const errorMessage = err.response?.data?.message || 
-                          err.response?.data?.error || 
-                          "Error al actualizar personal. Verifique los datos e intente nuevamente.";
+      let errorMessage = "Error al actualizar personal. Verifique los datos e intente nuevamente.";
+      
+      if (err.response?.data?.message) {
+        errorMessage = err.response.data.message;
+      } else if (err.response?.data?.error) {
+        errorMessage = err.response.data.error;
+      } else if (err.message) {
+        errorMessage = err.message;
+      }
+      
+      // Check for specific error cases
+      if (errorMessage.includes("400") || errorMessage.includes("Bad Request")) {
+        errorMessage = "Error en los datos enviados. Verifique que el departamento y rol sean válidos.";
+      }
       
       setApiStatus({
         loading: false,
@@ -307,14 +362,37 @@ export default function StaffManagement() {
   };
   
   const handleEditStaff = (staff: any) => {
-    setNewStaff({
-      email: staff.email,
-      role: staff.role,
-      branch: staff.branch,
-      start_date: staff.start_date,
-      end_date: staff.end_date || '',
-      userId: staff.userId
-    });
+    // Convert dates from YYYY-MM-DD to DD/MM/YYYY format for the form
+    const formatDateForForm = (dateStr: string | null) => {
+      if (!dateStr) return '';
+      
+      // If the date is already in DD/MM/YYYY format, return it as is
+      if (dateStr.includes('/')) return dateStr;
+      
+      // If the date is in YYYY-MM-DD format, convert it
+      if (dateStr.includes('-')) {
+        const [year, month, day] = dateStr.split('-');
+        return `${day}/${month}/${year}`;
+      }
+      
+      return dateStr;
+    };
+    
+    const formattedStaff = {
+      email: staff.email || '',
+      role: staff.role || '',
+      branch: staff.branch || '',
+      start_date: formatDateForForm(staff.start_date),
+      end_date: formatDateForForm(staff.end_date) || '',
+      userId: staff.userId || staff.id || ''
+    };
+    
+    // Store the original staff data for comparison
+    setOriginalStaff(formattedStaff);
+    
+    // Set the form data
+    setNewStaff(formattedStaff);
+    
     setEditingId(staff.id);
     setIsAddingStaff(true);
   };
@@ -328,6 +406,16 @@ export default function StaffManagement() {
       end_date: '',
       userId: ''
     });
+    
+    setOriginalStaff({
+      email: '',
+      role: '',
+      branch: '',
+      start_date: '',
+      end_date: '',
+      userId: ''
+    });
+    
     setEditingId(null);
     setIsAddingStaff(false);
     
@@ -481,7 +569,7 @@ export default function StaffManagement() {
     <ProtectedRoute allowedRoles={[AllowedRoles.IT, AllowedRoles.DIRECTIVOS]}>
       <AdminLayout>
         <AdminPageHeader
-          title="Gestión de Personal"
+          title="Gestión de Staff"
           description="Administra los roles y permisos del personal"
           action={
             <AdminButton
@@ -492,7 +580,7 @@ export default function StaffManagement() {
                 </svg>
               }
             >
-              Agregar Personal
+              Agregar Staff
             </AdminButton>
           }
         />
@@ -500,7 +588,7 @@ export default function StaffManagement() {
         {isAddingStaff ? (
           <AdminCard className="mt-6">
             <AdminCardHeader 
-              title={editingId ? "Editar Personal" : "Agregar Nuevo Personal"} 
+              title={editingId ? "Editar Staff" : "Agregar Nuevo Staff"} 
             />
             <AdminCardContent>
               {apiStatus.error && (
@@ -521,7 +609,9 @@ export default function StaffManagement() {
                   id="email"
                   required
                   className="sm:col-span-6"
-                  helpText="Debe ser un email de un usuario existente en el sistema"
+                  helpText={editingId 
+                    ? "No se puede modificar el email al editar un miembro existente" 
+                    : "Debe ser un email de un usuario existente en el sistema"}
                 >
                   <AdminInput
                     type="email"
@@ -530,6 +620,8 @@ export default function StaffManagement() {
                     onChange={(e) => setNewStaff({...newStaff, email: e.target.value})}
                     required
                     placeholder="usuario@example.com"
+                    disabled={!!editingId} // Disable email field when editing
+                    className={editingId ? "bg-gray-100" : ""}
                   />
                 </AdminFormField>
 
