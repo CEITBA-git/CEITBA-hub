@@ -10,6 +10,7 @@ import AdminTable from '@/app/components/admin/AdminTable';
 import AdminButton from '@/app/components/admin/AdminButton';
 import AdminSearchFilter from '@/app/components/admin/AdminSearchFilter';
 import Link from 'next/link';
+import { AllowedRoles } from '@/stores/user/modules';
 
 export default function SportsLogsPage() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -145,7 +146,7 @@ export default function SportsLogsPage() {
   ];
 
   return (
-    <ProtectedRoute allowedRoles={['admin', 'sports']}>
+    <ProtectedRoute allowedRoles={[AllowedRoles.DEPORTES, AllowedRoles.DIRECTIVOS, AllowedRoles.IT]}>
       <AdminLayout>
         <AdminPageHeader 
           title="Registros de Clases Deportivas" 

@@ -105,7 +105,7 @@ export default function OrganizationAdminPage() {
   ];
 
   return (
-    <ProtectedRoute allowedRoles={[AllowedRoles.IT, AllowedRoles.DIRECTIVO, AllowedRoles.EVENTOS]}>
+    <ProtectedRoute allowedRoles={[AllowedRoles.IT, AllowedRoles.DIRECTIVOS, AllowedRoles.EVENTOS]}>
       <AdminLayout>
         <AdminPageHeader 
           title="Organizaciones y Eventos" 

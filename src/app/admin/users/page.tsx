@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import AdminLayout from '@/app/components/layout/AdminLayout';
 import { ProtectedRoute } from '@/app/components/auth/ProtectedRoute';
 import AdminPageHeader from '@/app/components/admin/AdminPageHeader';
@@ -13,36 +14,37 @@ import { AllowedRoles } from '@/stores/user/modules';
 
 export default function UsersAdminPage() {
   const [searchQuery, setSearchQuery] = useState('');
+  const [users, setUsers] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   
-  // Datos de ejemplo para la tabla de usuarios
-  const usersData = [
-    {
-      id: '1',
-      name: 'Juan Pérez',
-      initials: 'JP',
-      email: 'juan.perez@example.com',
-      roles: ['Admin'],
-      status: 'Activo'
-    },
-    {
-      id: '2',
-      name: 'María García',
-      initials: 'MG',
-      email: 'maria.garcia@example.com',
-      roles: ['Deportes'],
-      status: 'Activo'
-    }
-  ];
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        setLoading(true);
+        const response = await axios.get('https://ceitba.org.ar/api/v1/user/all');
+        setUsers(response.data);
+        setError(null);
+      } catch (err) {
+        console.error('Error fetching users:', err);
+        setError("Error al cargar los usuarios. Por favor, intente nuevamente.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUsers();
+  }, []);
 
   // Filtrar usuarios según la búsqueda
-  const filteredUsers = usersData.filter(user => {
+  const filteredUsers = users.filter((user: any) => {
     if (!searchQuery) return true;
     
     const query = searchQuery.toLowerCase();
     return (
-      user.name.toLowerCase().includes(query) ||
-      user.email.toLowerCase().includes(query) ||
-      user.roles.some(role => role.toLowerCase().includes(query))
+      user.name?.toLowerCase().includes(query) ||
+      user.email?.toLowerCase().includes(query) ||
+      (user.roles && user.roles.some((role: string) => role.toLowerCase().includes(query)))
     );
   });
 
@@ -51,18 +53,22 @@ export default function UsersAdminPage() {
     {
       header: 'Nombre',
       accessor: 'name',
-      cell: (user: any) => (
-        <div className="flex items-center">
-          <div className="flex-shrink-0 h-10 w-10">
-            <div className="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500">
-              {user.initials}
+      cell: (user: any) => {
+        const initials = user.name ? user.name.split(' ').map((n: string) => n[0]).join('').toUpperCase() : '';
+        
+        return (
+          <div className="flex items-center">
+            <div className="flex-shrink-0 h-10 w-10">
+              <div className="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500">
+                {initials}
+              </div>
+            </div>
+            <div className="ml-4">
+              <div className="text-sm font-medium text-gray-900">{user.name}</div>
             </div>
           </div>
-          <div className="ml-4">
-            <div className="text-sm font-medium text-gray-900">{user.name}</div>
-          </div>
-        </div>
-      )
+        );
+      }
     },
     {
       header: 'Email',
@@ -76,7 +82,7 @@ export default function UsersAdminPage() {
       accessor: 'roles',
       cell: (user: any) => (
         <div>
-          {user.roles.map((role: string, index: number) => (
+          {user.roles && user.roles.map((role: string, index: number) => (
             <span 
               key={index}
               className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800 mr-1"
@@ -92,7 +98,7 @@ export default function UsersAdminPage() {
       accessor: 'status',
       cell: (user: any) => (
         <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-          {user.status}
+          {user.status || 'Activo'}
         </span>
       )
     },
@@ -110,7 +116,7 @@ export default function UsersAdminPage() {
   ];
 
   return (
-    <ProtectedRoute allowedRoles={[AllowedRoles.IT, AllowedRoles.DIRECTIVO]}>
+    <ProtectedRoute allowedRoles={[AllowedRoles.IT, AllowedRoles.DIRECTIVOS]}>
       <AdminLayout>
         <AdminPageHeader 
           title="Gestión de Usuarios" 
@@ -135,10 +141,17 @@ export default function UsersAdminPage() {
             title="Usuarios" 
             description="Todos los usuarios registrados en el sistema"
           />
-          <AdminTable 
-            columns={columns}
-            data={filteredUsers}
-          />
+          
+          {loading ? (
+            <div className="p-6 text-center">Cargando usuarios...</div>
+          ) : error ? (
+            <div className="p-6 text-center text-red-500">{error}</div>
+          ) : (
+            <AdminTable 
+              columns={columns}
+              data={filteredUsers}
+            />
+          )}
         </AdminCard>
       </AdminLayout>
     </ProtectedRoute>

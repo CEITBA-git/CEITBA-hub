@@ -97,7 +97,7 @@ export default function SportsAdminPage() {
   ];
 
   return (
-    <ProtectedRoute allowedRoles={[AllowedRoles.DEPORTES, AllowedRoles.DIRECTIVO, AllowedRoles.IT]}>
+    <ProtectedRoute allowedRoles={[AllowedRoles.DEPORTES, AllowedRoles.DIRECTIVOS, AllowedRoles.IT]}>
       <AdminLayout>
         <AdminPageHeader 
           title="Gestión de Deportes" 

@@ -251,7 +251,7 @@ export default function BenefitsManagement() {
   ];
 
   return (
-    <ProtectedRoute allowedRoles={[AllowedRoles.IT, AllowedRoles.DIRECTIVO]}>
+    <ProtectedRoute allowedRoles={[AllowedRoles.IT, AllowedRoles.DIRECTIVOS]}>
       <AdminLayout>
         <AdminPageHeader 
           title="Gestión de Beneficios" 

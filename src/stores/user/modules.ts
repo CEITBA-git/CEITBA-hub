@@ -6,7 +6,8 @@ export enum Branch {
     INFRA = "INFRA",
     DEPORTES = "DEPORTES",
     NAUTICA = "NAUTICA",
-    EVENTOS = "EVENTOS"
+    EVENTOS = "EVENTOS",
+    DIRECTIVOS = "DIRECTIVOS"
 }
 
 export enum StaffType {
@@ -55,6 +56,6 @@ export enum AllowedRoles {
     DEPORTES = Branch.DEPORTES,
     NAUTICA = Branch.NAUTICA,
     EVENTOS = Branch.EVENTOS,
-    DIRECTIVO = "DIRECTIVO",
+    DIRECTIVOS = Branch.DIRECTIVOS,
     ALL = "ALL"
 }
