@@ -12,6 +12,7 @@ interface AdminLayoutProps {
 const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const pathname = usePathname();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const user = useUserStore((state: any) => state.user);
   
   const navigation = [

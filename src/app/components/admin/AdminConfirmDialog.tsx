@@ -1,5 +1,4 @@
 import React from 'react';
-import AdminButton from './AdminButton';
 
 interface AdminConfirmDialogProps {
   isOpen: boolean;
@@ -36,7 +35,7 @@ const AdminConfirmDialog: React.FC<AdminConfirmDialogProps> = ({
     info: 'text-blue-500'
   };
 
-  const confirmButtonVariant = variant === 'danger' ? 'danger' : 'primary';
+  // const confirmButtonVariant = variant === 'danger' ? 'danger' : 'primary';
 
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto">

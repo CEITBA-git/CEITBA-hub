@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useState, useCallback } from 'react';
+import React, { useState } from 'react';
 import AdminLayout from '@/app/components/layout/AdminLayout';
 import { ProtectedRoute } from '@/app/components/auth/ProtectedRoute';
-import { useUserStore } from '@/stores/user/userStore';
+// import { useUserStore } from '@/stores/user/userStore';
 import AdminPageHeader from '@/app/components/admin/AdminPageHeader';
 import AdminCard from '@/app/components/admin/AdminCard';
 import AdminCardHeader from '@/app/components/admin/AdminCardHeader';
@@ -39,7 +39,7 @@ interface BenefitTime {
 }
 
 export default function BenefitsManagement() {
-  const user = useUserStore((state: any) => state.user);
+  // const user = useUserStore((state: any) => state.user);
   const [benefits, setBenefits] = useState<Benefit[]>(initialBenefits);
   const [benefitTimes, setBenefitTimes] = useState<BenefitTime[]>(initialBenefitTimes);
   const [selectedBenefitId, setSelectedBenefitId] = useState<string | null>(null);

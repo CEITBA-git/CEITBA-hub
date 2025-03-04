@@ -5,19 +5,14 @@ const userCache: Record<string, { data: User; timestamp: number }> = {};
 // Cache expiration time (5 minutes in milliseconds)
 const CACHE_EXPIRATION = 5 * 60 * 1000;
 
-const fetchUserDetails = async (email: string | object): Promise<User> => {
+const fetchUserDetails = async (email: string): Promise<User> => {
   // Extract just the email if an object is passed
   let emailValue: string;
   
   if (typeof email === 'string') {
     emailValue = email;
-  } else if (typeof email === 'object' && email !== null) {
-    // Extract email from user object - using proper typing
-    emailValue = (email as any).email || '';
-    
-    // Log the extracted email for debugging
-    console.log('email', emailValue);
-  } else {
+  } 
+  else {
     throw new Error('Invalid parameter: email is required');
   }
   

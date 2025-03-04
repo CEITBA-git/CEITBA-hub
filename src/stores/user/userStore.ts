@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { supabase } from '@/lib/supabase';
-import { AllowedRoles, Role, User } from './modules';
+import { AllowedRoles, User } from './modules';
 import { fetchUserDetails } from '@/app/api/api';
 
 interface UserState {
