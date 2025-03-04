@@ -54,5 +54,7 @@ export enum AllowedRoles {
     INFRA = Branch.INFRA,
     DEPORTES = Branch.DEPORTES,
     NAUTICA = Branch.NAUTICA,
-    EVENTOS = Branch.EVENTOS
+    EVENTOS = Branch.EVENTOS,
+    DIRECTIVO = "DIRECTIVO",
+    ALL = "ALL"
 }

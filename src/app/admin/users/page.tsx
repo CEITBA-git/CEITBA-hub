@@ -9,6 +9,7 @@ import AdminCardHeader from '@/app/components/admin/AdminCardHeader';
 import AdminButton from '@/app/components/admin/AdminButton';
 import AdminTable from '@/app/components/admin/AdminTable';
 import AdminSearchFilter from '@/app/components/admin/AdminSearchFilter';
+import { AllowedRoles } from '@/stores/user/modules';
 
 export default function UsersAdminPage() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -109,7 +110,7 @@ export default function UsersAdminPage() {
   ];
 
   return (
-    <ProtectedRoute allowedRoles={['admin']}>
+    <ProtectedRoute allowedRoles={[AllowedRoles.IT, AllowedRoles.DIRECTIVO]}>
       <AdminLayout>
         <AdminPageHeader 
           title="Gestión de Usuarios" 

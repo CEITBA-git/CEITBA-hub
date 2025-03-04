@@ -16,6 +16,7 @@ import AdminInput from '@/app/components/admin/AdminInput';
 import AdminSelect from '@/app/components/admin/AdminSelect';
 import AdminConfirmDialog from '@/app/components/admin/AdminConfirmDialog';
 import { initialBenefits, initialBenefitTimes, dayOptions } from './data';
+import { AllowedRoles } from '@/stores/user/modules';
 
 // Definición de tipos
 interface Benefit {
@@ -250,7 +251,7 @@ export default function BenefitsManagement() {
   ];
 
   return (
-    <ProtectedRoute allowedRoles={['admin']}>
+    <ProtectedRoute allowedRoles={[AllowedRoles.IT, AllowedRoles.DIRECTIVO]}>
       <AdminLayout>
         <AdminPageHeader 
           title="Gestión de Beneficios" 

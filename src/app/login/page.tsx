@@ -8,7 +8,7 @@ import { useUserStore } from '@/stores/user/userStore';
 
 export default function LoginPage() {
   const router = useRouter();
-  const { setUser, clearUser } = useUserStore();
+  const { setUser, clearUser, user, isAuthenticated } = useUserStore();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -16,82 +16,84 @@ export default function LoginPage() {
   const [error, setError] = useState('');
 
   useEffect(() => {
+    // If user is already authenticated, redirect to admin
+    if (isAuthenticated && user) {
+      router.push('/admin');
+      return;
+    }
+
     // Check for authentication state on component mount
-    const checkAuth = () => {
-      supabase.auth.getSession().then(({ data }) => {
+    const checkAuth = async () => {
+      try {
+        const { data } = await supabase.auth.getSession();
+        
         if (data.session?.user) {
           const email = data.session.user.email;
           if (email?.endsWith('@itba.edu.ar')) {
-            setUser(data.session.user.email as string);
+            await setUser(data.session.user.email as string);
             router.push('/admin');
           } else if (email) {
             // User is logged in but doesn't have ITBA email
-            supabase.auth.signOut().then(() => {
-              setError('No tienes permisos para acceder a este sistema, se requiere un correo ITBA.');
-              clearUser();
-            });
+            await supabase.auth.signOut();
+            setError('No tienes permisos para acceder a este sistema, se requiere un correo ITBA.');
+            clearUser();
           }
         }
-      });
+      } catch (error: any) {
+        setError(error.message || 'Error checking authentication');
+      }
     };
     
     checkAuth();
-  }, [router, setUser, clearUser]);
+  }, [router, setUser, clearUser, isAuthenticated, user]);
 
-  const handleEmailLogin = (e: React.FormEvent) => {
+  const handleEmailLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     setError('');
 
-    supabase.auth.signInWithPassword({
-      email,
-      password,
-    })
-    .then(({ data, error }) => {
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+      
       if (error) {
         throw error;
       }
 
-      console.log('data', data);
-      setUser(data.user.email!);
+      await setUser(data.user.email!);
       router.push('/admin');
-    })
-    .catch((error: any) => {
+    } catch (error: any) {
       setError(error.message || 'Error al iniciar sesión');
-    })
-    .finally(() => {
+    } finally {
       setIsLoading(false);
-    });
+    }
   };
 
   const handleGoogleLogin = async () => {
     setIsLoading(true);
     setError('');
 
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: {
-        redirectTo: `${window.location.origin}/auth/callback`,
-        queryParams: {
-          hd: 'itba.edu.ar' // This restricts to specific domains in Google login
-        }
-      },
-    });
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback`,
+          queryParams: {
+            hd: 'itba.edu.ar' // This restricts to specific domains in Google login
+          }
+        },
+      });
 
-    if (error) {
+      if (error) {
+        throw error;
+      }
+    } catch (error: any) {
       setError(error.message || 'Error al iniciar sesión con Google');
+    } finally {
       setIsLoading(false);
     }
-
-    const {data} = await supabase.auth.getSession();
-    const session = data.session;
-    if (session) {
-      setUser(session.user.email!);
-      console.log('Session', session);
-    } else {
-      console.log('No session');
-    }
-  
   };
 
   return (

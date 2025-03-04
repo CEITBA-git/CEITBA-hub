@@ -8,6 +8,7 @@ import AdminCard from '@/app/components/admin/AdminCard';
 import AdminCardHeader from '@/app/components/admin/AdminCardHeader';
 import AdminButton from '@/app/components/admin/AdminButton';
 import AdminTable from '@/app/components/admin/AdminTable';
+import { AllowedRoles } from '@/stores/user/modules';
 
 export default function OrganizationAdminPage() {
   // Datos de ejemplo para la tabla de eventos
@@ -104,7 +105,7 @@ export default function OrganizationAdminPage() {
   ];
 
   return (
-    <ProtectedRoute allowedRoles={['admin', 'organization']}>
+    <ProtectedRoute allowedRoles={[AllowedRoles.IT, AllowedRoles.DIRECTIVO, AllowedRoles.EVENTOS]}>
       <AdminLayout>
         <AdminPageHeader 
           title="Organizaciones y Eventos" 

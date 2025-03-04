@@ -9,6 +9,7 @@ import AdminCardHeader from '@/app/components/admin/AdminCardHeader';
 import AdminButton from '@/app/components/admin/AdminButton';
 import AdminTable from '@/app/components/admin/AdminTable';
 import Link from 'next/link';
+import { AllowedRoles } from '@/stores/user/modules';
 
 export default function SportsAdminPage() {
   // Datos de ejemplo para la tabla de deportes
@@ -96,7 +97,7 @@ export default function SportsAdminPage() {
   ];
 
   return (
-    <ProtectedRoute allowedRoles={['admin', 'sports']}>
+    <ProtectedRoute allowedRoles={[AllowedRoles.DEPORTES, AllowedRoles.DIRECTIVO, AllowedRoles.IT]}>
       <AdminLayout>
         <AdminPageHeader 
           title="Gestión de Deportes" 

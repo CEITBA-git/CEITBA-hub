@@ -1,5 +1,10 @@
 import { User } from "@/stores/user/modules";
 
+// Cache to store user details by email
+const userCache: Record<string, { data: User; timestamp: number }> = {};
+// Cache expiration time (5 minutes in milliseconds)
+const CACHE_EXPIRATION = 5 * 60 * 1000;
+
 const fetchUserDetails = async (email: string | object): Promise<User> => {
   // Extract just the email if an object is passed
   let emailValue: string;
@@ -21,6 +26,15 @@ const fetchUserDetails = async (email: string | object): Promise<User> => {
     throw new Error('Email is required to fetch user details');
   }
   
+  // Check if we have a valid cached response
+  const cachedUser = userCache[emailValue];
+  const now = Date.now();
+  
+  if (cachedUser && (now - cachedUser.timestamp) < CACHE_EXPIRATION) {
+    // Return cached data if it's still valid
+    return cachedUser.data;
+  }
+  
   try {
     // Use our own Next.js API route instead of direct call to external API
     const response = await fetch(`/api/user?email=${encodeURIComponent(emailValue)}`);
@@ -30,6 +44,13 @@ const fetchUserDetails = async (email: string | object): Promise<User> => {
     }
     
     const data = await response.json();
+    
+    // Cache the response
+    userCache[emailValue] = {
+      data,
+      timestamp: now
+    };
+    
     return data;
   } catch (error) {
     console.error('Error fetching user details:', error);

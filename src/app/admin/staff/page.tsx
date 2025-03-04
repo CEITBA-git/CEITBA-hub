@@ -15,6 +15,7 @@ import AdminSearchFilter from '@/app/components/admin/AdminSearchFilter';
 import AdminInput from '@/app/components/admin/AdminInput';
 import AdminSelect from '@/app/components/admin/AdminSelect';
 import AdminDateInput from '@/app/components/admin/AdminDateInput';
+import { AllowedRoles } from '@/stores/user/modules';
 
 // Mock data for staff members
 const initialStaffMembers = [
@@ -316,7 +317,7 @@ export default function StaffManagement() {
   ];
   
   return (
-    <ProtectedRoute allowedRoles={['admin']}>
+    <ProtectedRoute allowedRoles={[AllowedRoles.IT, AllowedRoles.DIRECTIVO]}>
       <AdminLayout>
         <AdminPageHeader
           title="Gestión de Personal"

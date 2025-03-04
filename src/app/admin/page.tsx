@@ -9,79 +9,63 @@ import AdminCardHeader from '@/app/components/admin/AdminCardHeader';
 import AdminCardContent from '@/app/components/admin/AdminCardContent';
 import AdminPageHeader from '@/app/components/admin/AdminPageHeader';
 import AdminButton from '@/app/components/admin/AdminButton';
-import { supabase } from '@/lib/supabase';
 import { AllowedRoles } from '@/stores/user/modules';
 import { useRouter } from 'next/navigation';
 
 export default function AdminDashboard() {
-  const user = useUserStore((state: any) => state.user);
+  const { user, isAuthenticated, checkAuth } = useUserStore();
   const [isLoading, setIsLoading] = useState(true);
-  const [userData, setUserData] = useState<any>(null);
   const router = useRouter();
 
   useEffect(() => {
-    // Check for auth error in URL and handle it
-    if (typeof window !== 'undefined') {
-      const url = window.location.href;
-      if (url.includes('auth-code-error')) {
-        // Clear the URL and redirect to login
-        router.push('/login');
-        return;
-      }
-    }
-
-    // Handle authentication state
-    const checkAuth = async () => {
+    const initialize = async () => {
       try {
-        const { data: { session } } = await supabase.auth.getSession();
-        
-        if (!session) {
-          // No session, redirect to login
-          router.push('/login');
-          return;
+        // If not authenticated, try to check auth status
+        if (!isAuthenticated) {
+          const isAuthed = await checkAuth();
+          if (!isAuthed) {
+            router.push('/login');
+            return;
+          }
         }
         
-        // If we have a user in the store, use it
-        if (user) {
-          setUserData(user);
-          setIsLoading(false);
-        } else {
-          // Wait a bit longer for user store to populate
-          const timer = setTimeout(() => {
-            if (user) {
-              setUserData(user);
-            }
-            setIsLoading(false);
-          }, 1500);
-          
-          return () => clearTimeout(timer);
-        }
-      } catch (error) {
-        console.error("Auth check error:", error);
+        // If we get here, we're authenticated
         setIsLoading(false);
+      } catch (error) {
+        console.error('Error initializing admin page:', error);
+        router.push('/login');
       }
     };
-    
-    checkAuth();
-  }, [user, router]);
 
-  // Don't render anything until we've checked authentication
+    initialize();
+  }, [isAuthenticated, checkAuth, router]);
+
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="spinner mb-4">
+            {/* Add your spinner/loading animation here */}
+            <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto"></div>
+          </div>
+          <p className="text-gray">Cargando información de usuario...</p>
+        </div>
       </div>
     );
   }
 
-  // Only render the protected content if we have user data
-  if (!userData) {
+  if (!user || !user.role) {
     return (
-      <div className="flex items-center justify-center min-h-screen flex-col">
-        <div className="text-xl font-semibold mb-4">Sesión no iniciada</div>
-        <Link href="/auth/login">
-          <AdminButton variant="primary">Iniciar Sesión</AdminButton>
-        </Link>
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-red-500 mb-4">Error: No se pudo cargar la información del usuario</p>
+          <button 
+            onClick={() => router.push('/login')}
+            className="px-4 py-2 bg-primary text-white rounded hover:bg-primary/90"
+          >
+            Volver al inicio de sesión
+          </button>
+        </div>
       </div>
     );
   }
@@ -97,8 +81,8 @@ export default function AdminDashboard() {
         <div className="mt-6">
           <AdminCard>
             <AdminCardHeader 
-              title={`Bienvenido, ${userData?.name || 'Usuario'}`} 
-              description={`Has iniciado sesión como: ${userData?.roles?.join(', ') || 'Cargando roles...'}`}
+              title={`Bienvenido, ${user?.name || 'Usuario'}`} 
+              description={`Has iniciado sesión como: ${user?.email || 'Cargando...'}`}
             />
             <div className="border-t border-gray-200">
               <dl>
@@ -107,7 +91,7 @@ export default function AdminDashboard() {
                     Email
                   </dt>
                   <dd className="text-sm text-gray-900 col-span-2">
-                    {userData?.email || 'Cargando...'}
+                    {user?.email || 'Cargando...'}
                   </dd>
                 </div>
                 <div className="bg-white px-6 py-5 grid grid-cols-3 gap-4">
@@ -115,7 +99,7 @@ export default function AdminDashboard() {
                     ID de Usuario
                   </dt>
                   <dd className="text-sm text-gray-900 col-span-2">
-                    {userData?.id || 'Cargando...'}
+                    {user?.id || 'Cargando...'}
                   </dd>
                 </div>
               </dl>
