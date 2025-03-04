@@ -22,6 +22,7 @@ export default function FaqPage() {
             >
               <h3 className="font-semibold text-lg mb-3">{item.question}</h3>
               <p className="text-gray leading-relaxed">{item.answer}</p>
+              <p className="text-gray text-sm mt-3">hi</p>
             </div>
           ))}
         </div>
