@@ -41,7 +41,8 @@ const config: NextConfig = {
               "form-action 'self' https://accounts.google.com",
               "base-uri 'self'",
               "object-src 'none'",
-              "media-src 'self'"
+              "media-src 'self'",
+              "connect-src 'self' http://localhost:3000 https://accounts.google.com;",
             ].join('; '),
           },
           {
