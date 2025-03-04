@@ -26,7 +26,8 @@ const branchOptions = [
   { value: 'INFRA', label: 'INFRA' },
   { value: 'DEPORTES', label: 'DEPORTES' },
   { value: 'NAUTICA', label: 'NAUTICA' },
-  { value: 'EVENTOS', label: 'EVENTOS' }
+  { value: 'EVENTOS', label: 'EVENTOS' },
+  { value: 'DIRECTIVOS', label: 'DIRECTIVOS' }
 ];
 
 // Roles by branch - updated to match API expectations
@@ -37,6 +38,7 @@ const rolesBybranch = {
   'DEPORTES': [StaffType.LIDER, StaffType.MIEMBRO],
   'NAUTICA': [StaffType.LIDER, StaffType.MIEMBRO],
   'EVENTOS': [StaffType.LIDER, StaffType.MIEMBRO],
+  'DIRECTIVOS': [StaffType.PRESIDENTE, StaffType.VICEPRESIDENTE, StaffType.TESORERIA, StaffType.SECRETARIA],
 };
 
 export default function StaffManagement() {
@@ -511,7 +513,7 @@ export default function StaffManagement() {
       cell: (staff: any) => {
         // Mostrar "Actual" si no hay fecha de fin
         if (!staff.end_date) {
-          return <div className="text-sm text-gray-900">Actual</div>;
+          return <div className="text-sm text-gray-900">-/-/-</div>;
         }
         
         // Asegurarse de que la fecha se muestre en formato dd/mm/yyyy
