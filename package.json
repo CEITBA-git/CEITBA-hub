@@ -12,6 +12,7 @@
     "@auth/core": "^0.34.2",
     "@heroicons/react": "^2.2.0",
     "@prisma/client": "^6.2.1",
+    "@supabase/ssr": "^0.5.2",
     "@supabase/supabase-js": "^2.49.1",
     "crypto": "^1.0.1",
     "dotenv": "^16.4.7",
@@ -24,7 +25,8 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "tailwind-scrollbar": "^3.1.0",
-    "zod": "^3.24.1"
+    "zod": "^3.24.1",
+    "zustand": "^5.0.3"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

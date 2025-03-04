@@ -26,7 +26,7 @@ const config: NextConfig = {
           },
           {
             key: 'Access-Control-Allow-Headers',
-            value: 'Content-Type, Authorization'
+            value: 'Content-Type, Authorization, x-forwarded-host'
           },
           {
             key: 'Content-Security-Policy',
@@ -36,7 +36,7 @@ const config: NextConfig = {
               "style-src 'self' 'unsafe-inline'",
               "img-src 'self' data: https: http:",
               "font-src 'self' data:",
-              // "connect-src 'self' https://accounts.google.com",
+              "connect-src 'self' https://accounts.google.com https://*.supabase.co https://ceitba.org.ar",
               "frame-src 'self' https://accounts.google.com",
               "form-action 'self' https://accounts.google.com",
               "base-uri 'self'",
@@ -55,7 +55,7 @@ const config: NextConfig = {
           },
           {
             key: 'Referrer-Policy',
-            value: 'origin-when-cross-origin',
+            value: 'strict-origin-when-cross-origin',
           },
           {
             key: 'Permissions-Policy',
