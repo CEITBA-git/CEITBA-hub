@@ -68,7 +68,7 @@ export default function BenefitCard({ data, type }: BenefitCardProps) {
                           ) : (
                             place
                           )}
-                          {index < arr.length - 1 ? ", " : ""}
+                          {index < arr.length - 1 ? " | " : ""}
                         </span>
                       ))}
                   </p>
@@ -77,7 +77,7 @@ export default function BenefitCard({ data, type }: BenefitCardProps) {
 
             {sport.teachers && sport.teachers.length > 0 && (
               <p className="text-gray">
-                👥 Profesores:{" "}
+                🎓 Profesores:{" "}
                 {sport.teachers.map((teacher, index, arr) => (
                   <span key={index}>
                     {teacher}

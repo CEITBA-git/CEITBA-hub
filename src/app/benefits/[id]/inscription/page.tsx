@@ -141,12 +141,13 @@ export default function BenefitRegistration() {
           return "Por favor selecciona un nivel de idioma";
         }
         if (
-          (type !== "sport" && type !== "activity") ||
-          (!("times" in benefit! && benefit.times?.length) &&
-            formData.horarios.length === 0)
+          (type === "sport" || type === "activity") && 
+          ("times" in benefit!) && (benefit!.times?.length) &&
+          formData.horarios.length === 0
         ) {
           return "Por favor selecciona al menos un horario";
         }
+        
         if (!formData.termsAccepted) {
           return "Debes aceptar los términos y condiciones";
         }
@@ -274,7 +275,7 @@ export default function BenefitRegistration() {
             Inscripción a {benefit.name}
           </h1>
           <p className="text-gray mt-2">
-            Completa el formulario para inscribirte en este beneficio de CEITBA
+            Completá el formulario para inscribirte a este beneficio del CEITBA
           </p>
         </section>
 
@@ -599,7 +600,7 @@ export default function BenefitRegistration() {
         className="w-full px-4 py-2 bg-background rounded-lg border border-black/[.08] dark:border-white/[.145] focus:outline-none focus:ring-2 focus:ring-primary/50"
       >
         <option value="">Selecciona tu nivel</option>
-        <option value="idk">No sé</option>
+        <option value="n/a">No sé</option>
         {languageBenefit.levels?.map((level: string) => (
           <option key={level} value={level}>
             {level}
