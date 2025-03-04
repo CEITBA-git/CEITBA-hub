@@ -12,7 +12,7 @@ interface UserState {
   error: string | null;
   hasRole: (role: AllowedRoles) => boolean;
   hasAnyRole: (roles: AllowedRoles[]) => boolean;
-  setUser: (email: string) => void;
+  setUser: (email: string) => Promise<void>;
   clearUser: () => void;
   logout: () => Promise<void>;
   checkAuth: () => Promise<boolean>;
@@ -40,6 +40,7 @@ export const useUserStore = create<UserState>()(
 
       setUser: async (email: string) => {
         if (!email) return;
+        console.log('email', email);
         const userDetails = await fetchUserDetails(email);
         set({ user: userDetails, isAuthenticated: true, error: null });
       },

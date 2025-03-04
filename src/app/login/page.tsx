@@ -22,7 +22,7 @@ export default function LoginPage() {
         if (data.session?.user) {
           const email = data.session.user.email;
           if (email?.endsWith('@itba.edu.ar')) {
-            setUser(data.session.user as any);
+            setUser(data.session.user.email as string);
             router.push('/admin');
           } else if (email) {
             // User is logged in but doesn't have ITBA email
@@ -52,6 +52,7 @@ export default function LoginPage() {
         throw error;
       }
 
+      console.log('data', data);
       setUser(data.user.email!);
       router.push('/admin');
     })
