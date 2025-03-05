@@ -18,7 +18,7 @@ const config: NextConfig = {
         headers: [
           {
             key: 'Access-Control-Allow-Origin',
-            value: process.env.NODE_ENV === 'production' ? 'https://ceitba.org.ar' : 'http://localhost:3000'
+            value: 'https://ceitba.org.ar'
           },
           {
             key: 'Access-Control-Allow-Methods',
@@ -42,7 +42,7 @@ const config: NextConfig = {
               "base-uri 'self'",
               "object-src 'none'",
               "media-src 'self'",
-              "connect-src 'self' http://localhost:3000 https://accounts.google.com;",
+              "connect-src 'self' http://ceitba.org.ar https://accounts.google.com;",
             ].join('; '),
           },
           {
@@ -85,7 +85,7 @@ const config: NextConfig = {
   },
   experimental: {
     serverActions: {
-      allowedOrigins: process.env.NODE_ENV === 'production' ? ['ceitba.org.ar'] : ['localhost:3000']
+      allowedOrigins: ['ceitba.org.ar']
     }
   }
 };
