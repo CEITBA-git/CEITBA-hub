@@ -58,7 +58,7 @@ export default function LoginPage() {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `${window.location.origin}/auth/callback`,
+          redirectTo: `https://ceitba.org.ar/auth/callback`,
           queryParams: {
             hd: 'itba.edu.ar' // This restricts to specific domains in Google login
           }
