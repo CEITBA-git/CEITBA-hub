@@ -60,13 +60,14 @@ export default function LoginPage() {
         options: {
           redirectTo: `https://ceitba.org.ar/auth/callback`,
           queryParams: {
-            hd: 'itba.edu.ar' // This restricts to specific domains in Google login
+            hd: 'itba.edu.ar' 
           }
         },
       });
 
-      if (error) {
-        throw error;
+      if (!error) {
+        // IMPORTANT! Set user data from Google provider to our public.user table
+        await supabase.rpc('sync_google_user_data');
       }
     } catch (error) {
       const authError = error as AuthError;
